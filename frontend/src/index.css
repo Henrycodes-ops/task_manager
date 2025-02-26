@@ -2,7 +2,27 @@
   font-family: Barlow;
   src: url(./Barlow_Semi_Condensed/BarlowSemiCondensed-Bold.ttf);
 }
+@font-face {
+  font-family: BarlowMedium;
+  src: url(./Barlow_Semi_Condensed/BarlowSemiCondensed-Medium.ttf);
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  text-align: center;
+  background-color: brown;
+}
 
 h1 {
   font-family: Barlow;
+}
+
+p{
+  font-family: BarlowMedium;
+
 }
