@@ -6,6 +6,10 @@
   font-family: BarlowMedium;
   src: url(./Barlow_Semi_Condensed/BarlowSemiCondensed-Medium.ttf);
 }
+@font-face {
+  font-family: BarlowRegular;
+  src: url(./Barlow_Semi_Condensed/BarlowSemiCondensed-SemiBold.ttf);
+}
 
 * {
   margin: 0;
@@ -13,16 +17,35 @@
   box-sizing: border-box;
 }
 
+:root {
+  --white: floralwhite;
+}
+
 body {
   text-align: center;
-  background-color: brown;
+  background-color: rgb(6, 0, 0);
 }
 
 h1 {
   font-family: Barlow;
+  font-size: 3rem;
+  color: var(--white);
 }
 
-p{
+p {
   font-family: BarlowMedium;
+  font-size: 1.3rem;
+  color: var(--white);
+}
+
+.getSpan {
+  color: var(--white);
+  font-family: BarlowRegular;
+}
+
+a {
+  color: var(--white);
+  font-family: BarlowRegular;
+  text-decoration: none;
 
 }
