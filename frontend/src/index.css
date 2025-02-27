@@ -1,3 +1,4 @@
+
 @font-face {
   font-family: Barlow;
   src: url(./Barlow_Semi_Condensed/BarlowSemiCondensed-Bold.ttf);
@@ -18,29 +19,42 @@
 }
 
 :root {
-  --white: #232121;
+  --black: #232121;
 }
 
+
+@media (prefers-color-scheme: dark) {
+  
+  body {
+    color: white;
+  }
+}
+
+
+body {
+  background-color: #121212;
+  color: white; /* Updated to apply the text color */
+}
 
 h1 {
   font-family: Barlow;
   font-size: 3rem;
-  color: var(--white);
+  color: var(--black);
 }
 
 p {
   font-family: BarlowMedium;
   font-size: 1.3rem;
-  color: var(--white);
+  color: var(--black);
 }
 
 .getSpan {
-  color: var(--white);
+  color: var(--black);
   font-family: BarlowRegular;
 }
 
 a {
-  color: var(--white);
+  color: var(--black);
   font-family: BarlowRegular;
   text-decoration: none;
 }

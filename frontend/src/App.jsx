@@ -7,7 +7,7 @@ import SplineContainer from "./spline";
 export default function TaskManager() {
   return (
     <>
-      <main className="appContainer">
+      <main className="appContainer ">
         {/* <Navbar /> */}
 
         <div className="header">
