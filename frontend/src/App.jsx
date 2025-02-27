@@ -2,13 +2,13 @@
 
 
 import SplineContainer from "./spline";
-import Navbar from "./navbar";
+// import Navbar from "./navbar";
 
 export default function TaskManager() {
   return (
     <>
       <main className="appContainer">
-        <Navbar />
+        {/* <Navbar /> */}
 
         <div className="header">
           <h1>Manage your daily tasks</h1>
