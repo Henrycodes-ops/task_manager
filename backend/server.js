@@ -1,3 +1,5 @@
+dotenv.config();
+
 import path from "path";
 import { fileURLToPath } from "url";
 import express from "express";
@@ -12,9 +14,9 @@ console.log("Server is running...");
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 // Define the port number for the server to listen on
-const PORT = 4000; // Change if necessary
+const port = process.env.PORT || 3000;
 
-console.log(`Server is running on http://localhost:${PORT}`);
+console.log(`Server is running on http://localhost:${port}`);
 // Serve static files from the "src" directory
 app.use(express.static(path.join(__dirname, "frontend", "src")));
 app.use(express.static(path.join(__dirname, "src")));
@@ -22,13 +24,13 @@ app.use(express.static(path.join(__dirname, "src")));
 // app.get("/", (req, res) => {
 //   res.sendFile(path.join(__dirname, "src", "index.html"));
 //   console.log(res);
-  
-// });
 
+// });
 
 const sendAppFile = (req, res) => {
   console.log("Sending App.jsx file...");
-  const appPath = process.env.APP_PATH || path.join(__dirname, "frontend", "src", "App.jsx");
+  const appPath =
+    process.env.APP_PATH || path.join(__dirname, "frontend", "src", "App.jsx");
   res.sendFile(appPath, (err) => {
     if (err) {
       console.error("Error sending file:", err);
@@ -39,8 +41,3 @@ const sendAppFile = (req, res) => {
 };
 
 app.get("/", sendAppFile);
-
-
-
-
-
