@@ -1,4 +1,3 @@
-
 import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 import Header from "./header";
 import Task from "./task";
@@ -14,12 +13,11 @@ export default function TaskManager() {
           element={
             <main className="appContainer">
               <Header />
-              <Home />
               <SplineContainer />
             </main>
           }
         />
-        <Route path="/task" element={<Task />} />
+        <Route path="/home" element={<Home />} />
       </Routes>
     </Router>
   );
