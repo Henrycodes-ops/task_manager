@@ -1,5 +1,6 @@
-import Header from "./header";
+
 import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
+import Header from "./header";
 import Task from "./task";
 import SplineContainer from "./spline";
 
@@ -11,8 +12,8 @@ export default function TaskManager() {
         <Switch>
           <Route path="/task" component={Task} />
         </Switch>
+        <SplineContainer />
       </Router>
-      <SplineContainer />
     </main>
   );
 }
