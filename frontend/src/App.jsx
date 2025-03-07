@@ -4,7 +4,7 @@ import Header from "./components/header";
 // import Task from "./components/task";
 import SplineContainer from "./components/spline";
 // import Home from "./components/home";
-import Login from "./components/login";
+import Login from "./components/Signup";
 
 export default function TaskManager() {
   return (
