@@ -1,8 +1,10 @@
+
 import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
-import Header from "./header";
-import Task from "./task";
-import SplineContainer from "./spline";
-import Home from "./home";
+import Header from "./components/header";
+// import Task from "./components/task";
+import SplineContainer from "./components/spline";
+import Home from "./components/home";
+import Login from "./components/login";
 
 export default function TaskManager() {
   return (
@@ -17,7 +19,7 @@ export default function TaskManager() {
             </main>
           }
         />
-        <Route path="/home" element={<Home />} />
+        <Route path="/login" element={<Login />} />
       </Routes>
     </Router>
   );
