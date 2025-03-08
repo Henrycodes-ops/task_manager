@@ -1,39 +1,53 @@
-// dotenv.config();
+import express from "express";
+import dotenv from "dotenv";
+import path from "path";
+import { fileURLToPath } from "url";
 
-// import path from "path";
-// import { fileURLToPath } from "url";
-// import express from "express";
-// import dotenv from "dotenv";
-
-// dotenv.config();
-// const app = express();
-
-console.log("Server is running...");
+// Configure environment variables
+dotenv.config();
 
 // Convert __dirname to work with ES6 modules
-// const __filename = fileURLToPath(import.meta.url);
-// const __dirname = path.dirname(__filename);
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+
+// Initialize Express app
+const app = express();
+
 // Define the port number for the server to listen on
-const port = 5000;
+const port = process.env.PORT || 5000;
 
-console.log(`Server is running on http://localhost:${port}`);
-// Serve static files from the "src" directory
-// app.use(express.static(path.join(__dirname, "frontend", "src")));
+// Add middleware to parse JSON
+app.use(express.json());
 
+// API routes go here
+app.get("/api/status", (req, res) => {
+  res.json({ status: "Server is running" });
+});
 
+// For development purposes, serve the React app from the frontend folder
+if (process.env.NODE_ENV === "development") {
+  // This is for development only - in production, you'll serve the built files
+  app.use(express.static(path.join(__dirname, "..", "frontend", "src")));
 
+  // Serve index.html for any other routes
+  app.get("*", (req, res) => {
+    res.sendFile(
+      path.join(__dirname, "..", "frontend", "public", "index.html")
+    );
+  });
+}
 
-// const sendAppFile = (req, res) => {
-//   console.log("Sending App.jsx file...");
-//   const appPath =
-//      path.join( __dirname, "./frontend/src/app.jsx");
-//   res.sendFile(appPath, (err) => {
-//     if (err) {
-//       console.error("Error sending file:", err);
-//     } else {
-//       console.log("App.jsx file sent successfully!");
-//     }
-//   });
-// };
+// For production, serve from the build folder
+if (process.env.NODE_ENV === "production") {
+  app.use(express.static(path.join(__dirname, "..", "frontend", "build")));
 
-// app.get("/", sendAppFile);
+  // Serve index.html for any other routes
+  app.get("*", (req, res) => {
+    res.sendFile(path.join(__dirname, "..", "frontend", "build", "index.html"));
+  });
+}
+
+// Start the server
+app.listen(port, () => {
+  console.log(`Server is running on http://localhost:${port}`);
+});
