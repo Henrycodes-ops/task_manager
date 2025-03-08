@@ -19,33 +19,34 @@ const port = process.env.PORT || 5000;
 // Add middleware to parse JSON
 app.use(express.json());
 
-// API routes go here
+// API routes
 app.get("/api/status", (req, res) => {
   res.json({ status: "Server is running" });
 });
 
-// For development purposes, serve the React app from the frontend folder
-if (process.env.NODE_ENV === "development") {
-  // This is for development only - in production, you'll serve the built files
-  app.use(express.static(path.join(__dirname, "..", "frontend", "src")));
-
-  // Serve index.html for any other routes
-  app.get("*", (req, res) => {
-    res.sendFile(
-      path.join(__dirname, "..", "frontend", "public", "index.html")
-    );
-  });
-}
-
-// For production, serve from the build folder
-if (process.env.NODE_ENV === "production") {
-  app.use(express.static(path.join(__dirname, "..", "frontend", "build")));
-
-  // Serve index.html for any other routes
-  app.get("*", (req, res) => {
-    res.sendFile(path.join(__dirname, "..", "frontend", "build", "index.html"));
-  });
-}
+// Catch-all handler for the root and other frontend routes
+app.get("*", (req, res) => {
+  res.send(`
+    <html>
+      <head>
+        <title>TaskFlow.ai</title>
+        <style>
+          body { font-family: Arial, sans-serif; text-align: center; padding: 50px; }
+          h1 { color: #4a90e2; }
+          p { margin: 20px 0; }
+          .status { padding: 10px; background-color: #e8f4ff; border-radius: 5px; display: inline-block; }
+        </style>
+      </head>
+      <body>
+        <h1>TaskFlow.ai API Server</h1>
+        <p>The backend server is running correctly.</p>
+        <div class="status">Server status: Online</div>
+        <p>If you're trying to access the frontend, please make sure the frontend development server is running.</p>
+        <p>Navigate to <a href="http://localhost:3000">http://localhost:3000</a> to view your React application.</p>
+      </body>
+    </html>
+  `);
+});
 
 // Start the server
 app.listen(port, () => {
