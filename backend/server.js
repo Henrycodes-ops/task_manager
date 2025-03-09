@@ -42,7 +42,7 @@ app.get("*", (req, res) => {
         <p>The backend server is running correctly.</p>
         <div class="status">Server status: Online</div>
         <p>If you're trying to access the frontend, please make sure the frontend development server is running.</p>
-        <p>Navigate to <a href="http://localhost:3000">http://localhost:3000</a> to view your React application.</p>
+        <p>Navigate to <a href="http://localhost:5173">http://localhost:5173</a> to view your React application.</p>
       </body>
     </html>
   `);
