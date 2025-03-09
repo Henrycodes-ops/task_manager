@@ -7,6 +7,8 @@
     "start": "concurrently \"npm run start-backend\" \"npm run start-frontend\"",
     "start-backend": "cd backend && node server.js",
     "start-frontend": "cd frontend && npm run dev",
+    "dev": "concurrently \"npm run dev-backend\" \"npm run start-frontend\"",
+    "dev-backend": "cd backend && nodemon server.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [],
@@ -16,5 +18,8 @@
     "@splinetool/react-spline": "^4.0.0",
     "@splinetool/runtime": "^1.9.71",
     "concurrently": "^9.1.2"
+  },
+  "devDependencies": {
+    "nodemon": "^3.1.9"
   }
 }
