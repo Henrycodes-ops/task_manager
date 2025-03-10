@@ -54,11 +54,12 @@ body {
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  width: 50%;
+  width: 30rem;
   margin: auto;
   top: 20rem;
   
-  background-color:#fff;
-  backdrop-filter: blur(30px); 
+  background-color:transparent;
+  backdrop-filter: blur(30px);
+  
   
 }
