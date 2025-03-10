@@ -21,19 +21,23 @@ body {
   background-color: #f8f9fa;
 }
 
-.header {
-  height: 100%;
+.splineContainer {
+  height: 100vh;
+  width: 100%;
 }
 
 .getStarted {
   font-family: Barlow;
-  font-size: 24px;
+  font-size: 16px;
   font-weight: bold;
-  color: #6ED3A9 !important;
-  border: none;
-  border-radius: 5px;
+  color: #3273dc !important;
   padding: 10px 20px;
   cursor: pointer;
   position: absolute;
   bottom: 0;
+  text-decoration: none;
+
+  &:hover {
+    scale: 1.1;
+  }
 }
