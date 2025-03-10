@@ -51,14 +51,14 @@ body {
 .signup {
   position: relative;
   display: flex;
-  /* flex-direction: column; */
+  flex-direction: column;
   align-items: center;
   justify-content: center;
   width: 50%;
   margin: auto;
-  top: 50%; /* Uncommented to center vertically */
-  padding-top: 20rem; /* Uncommented to add padding */
-  background-color:transparent;
+  top: 20rem;
+  
+  background-color:#fff;
   backdrop-filter: blur(30px); 
   
 }
