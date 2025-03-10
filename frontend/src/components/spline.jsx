@@ -7,3 +7,13 @@ export default function SplineContainer() {
     </div>
   );
 }
+
+export function SplineBlob() {
+  return (
+    <div className="splineBlob">
+       <Spline
+        scene="https://prod.spline.design/KT77YMuJyvvFZfgQ/scene.splinecode" 
+      />
+    </div>
+  );
+}
