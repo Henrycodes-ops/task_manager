@@ -21,10 +21,17 @@ export default function SplineContainer() {
 }
 
 export function SplineBlob() {
+    const [loaded, setLoaded] = useState(false);
+    const { setSplineLoaded } = useContext(SplineLoadContext);
+
+    const handleSplineLoad = () => {
+      setLoaded(true);
+      setSplineLoaded(true);
+    };
 
   return (
     <div className="splineBlob">
-      <Spline scene="https://prod.spline.design/KT77YMuJyvvFZfgQ/scene.splinecode" />
+      <Spline scene="https://prod.spline.design/KT77YMuJyvvFZfgQ/scene.splinecode" onLoad={handleSplineLoad}/>
     </div>
   );
 }
