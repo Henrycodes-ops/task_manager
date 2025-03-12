@@ -3,7 +3,7 @@ import { useState, useContext } from "react";
 import Spline from "@splinetool/react-spline";
 import { SplineLoadContext } from "./splineLoadProvider";
 
-export function SplineContainer() {
+export default function SplineContainer() {
   const [loaded, setLoaded] = useState(false);
   const { setSplineLoaded } = useContext(SplineLoadContext);
 
