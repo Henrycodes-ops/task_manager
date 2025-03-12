@@ -33,10 +33,8 @@ export function SplineBlob() {
 
   return (
     <div className="splineBlob">
-      <Spline
-        scene="https://prod.spline.design/KT77YMuJyvvFZfgQ/scene.splinecode"
-        onLoad={handleSplineLoad}
-      />
+      <Spline scene="https://prod.spline.design/KT77YMuJyvvFZfgQ/scene.splinecode" onLoad={handleSplineLoad} />
+    
     </div>
   );
 }
