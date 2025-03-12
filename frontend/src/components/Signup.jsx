@@ -10,7 +10,7 @@ export default function Login() {
     <>
       {splineLoaded && (
         <main>
-          <SplineBlob />
+          <SplineBlob  />
         </main>
       )}
       <div className="signup">
