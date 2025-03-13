@@ -1,4 +1,3 @@
-// spline.js
 import { useState, useContext } from "react";
 import Spline from "@splinetool/react-spline";
 import { SplineLoadContext } from "./splineLoadProvider";
