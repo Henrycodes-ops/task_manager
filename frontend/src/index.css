@@ -17,6 +17,17 @@
   box-sizing: border-box;
 }
 
+/* Base styles */
+:root {
+  --glass-bg: rgba(255, 255, 255, 0.15);
+  --glass-border: rgba(255, 255, 255, 0.2);
+  --glass-shadow: rgba(0, 0, 0, 0.05);
+  --text-color: #3273dc ;
+  --input-bg: rgba(255, 255, 255, 0.1);
+  --button-primary: rgba(255, 255, 255, 0.25);
+  --button-hover: rgba(255, 255, 255, 0.35);
+}
+
 body {
   background-color: #e2e6eb;
 }
@@ -55,7 +66,7 @@ body {
   width: 100vw;
 }
 
-.signup {
+/* .signup {
   position: relative;
   display: flex;
   flex-direction: column;
@@ -68,24 +79,15 @@ body {
   border-radius: 10px;
   background-color: rgba(255, 255, 255, 0.8);
   backdrop-filter: blur(30px);
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-}
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); */
+/* } */
 
 
 
 
 
 
-/* Base styles */
-:root {
-  --glass-bg: rgba(255, 255, 255, 0.15);
-  --glass-border: rgba(255, 255, 255, 0.2);
-  --glass-shadow: rgba(0, 0, 0, 0.05);
-  --text-color: rgba(255, 255, 255, 0.9);
-  --input-bg: rgba(255, 255, 255, 0.1);
-  --button-primary: rgba(255, 255, 255, 0.25);
-  --button-hover: rgba(255, 255, 255, 0.35);
-}
+
 
 body {
   margin: 0;
