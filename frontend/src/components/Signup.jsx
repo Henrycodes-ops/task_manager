@@ -55,7 +55,7 @@ export default function Login() {
 
       {!splineLoaded && (
         <div className="loading-overlay">
-          <div className="loader">Loading...</div>
+          <div className="loader"></div>
         </div>
       )}
     </div>

@@ -145,7 +145,6 @@ body {
 
 body {
   margin: 0;
-  font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
   color: var(--text-primary);
   background-color: transparent;
   height: 100vh;
@@ -224,19 +223,9 @@ body {
   color: var(--text-primary);
   text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
   position: relative;
+  font-family: Barlow;
 }
 
-.login-form h2::after {
-  content: '';
-  position: absolute;
-  bottom: -8px;
-  left: 50%;
-  transform: translateX(-50%);
-  width: 40px;
-  height: 3px;
-  background: var(--accent-color);
-  border-radius: 2px;
-}
 
 .form-group {
   margin-bottom: 20px;
@@ -251,6 +240,7 @@ body {
   background: var(--input-bg);
   color: var(--text-primary);
   font-size: 16px;
+  font-family: BarlowMedium;
   box-sizing: border-box;
   transition: all 0.2s ease, background 0.3s ease, color 0.3s ease;
   backdrop-filter: blur(4px);
@@ -260,23 +250,13 @@ body {
 .form-group input::placeholder {
   color: var(--text-muted);
   transition: color 0.3s ease;
+  font-family: BarlowMedium;
 }
 
 .form-group input:focus {
   outline: none;
   border-color: var(--primary-color);
   box-shadow: 0 0 0 3px var(--primary-light);
-}
-
-.form-group::after {
-  content: '';
-  position: absolute;
-  bottom: 0;
-  left: 0;
-  width: 0;
-  height: 2px;
-  background: var(--primary-color);
-  transition: width 0.3s ease;
 }
 
 .form-group:focus-within::after {
@@ -297,6 +277,8 @@ body {
   transition: all 0.2s ease, background 0.3s ease;
   position: relative;
   overflow: hidden;
+  font-family: Barlow;
+
 }
 
 .login-button::before {
@@ -336,6 +318,7 @@ body {
   margin: 20px 0;
   color: var(--text-muted);
   transition: color 0.3s ease;
+  font-family: BarlowRegular;
 }
 
 .separator::before,
@@ -370,6 +353,8 @@ body {
   font-weight: 500;
   cursor: pointer;
   transition: all 0.2s ease, background 0.3s ease, border-color 0.3s ease;
+  font-family: Barlow;
+  text-transform: uppercase;
 }
 
 .signUpWithGoogle:hover {
@@ -402,6 +387,7 @@ body {
   font-size: 14px;
   color: var(--text-secondary);
   transition: color 0.3s ease;
+  font-family: BarlowRegular;
 }
 
 .signup-link a {
