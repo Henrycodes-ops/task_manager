@@ -13,7 +13,7 @@ export default function TaskManager() {
         <Routes>
           <Route
             path="/"
-            element={
+            element={ 
               <main className="appContainer">
                 <Header />
                 <SplineContainer />
