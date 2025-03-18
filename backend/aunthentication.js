@@ -1,9 +1,13 @@
 const express = require("express");
 const { OAuth2Client } = require("google-auth-library");
 const jwt = require("jsonwebtoken");
+const cors = require("cors");
+const port = 3001;
+
 
 const app = express();
 app.use(express.json());
+app.use(cors());
 
 const GOOGLE_CLIENT_ID =
   "1060221181168-tcqc0u99kb3kbnhjrburithdi5ga8cvo.apps.googleusercontent.com";
@@ -64,6 +68,6 @@ async function findOrCreateUser(userData) {
   };
 }
 
-app.listen(3001, () => {
-  console.log("Server running on port 3001");
+app.listen(port, () => {
+  console.log(`Server running on port ${port}`);
 });

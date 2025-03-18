@@ -54,7 +54,7 @@ export default function Login() {
   const handleGoogleResponse = async (response) => {
     // Send the ID token to your backend
     try {
-      const result = await fetch("/api/auth/google", {
+      const result = await fetch("http://localhost:3001/api/auth/google", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
