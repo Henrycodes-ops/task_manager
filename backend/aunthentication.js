@@ -5,9 +5,10 @@ const jwt = require("jsonwebtoken");
 const app = express();
 app.use(express.json());
 
-const GOOGLE_CLIENT_ID = "YOUR_GOOGLE_CLIENT_ID";
+const GOOGLE_CLIENT_ID =
+  "1060221181168-tcqc0u99kb3kbnhjrburithdi5ga8cvo.apps.googleusercontent.com";
 const client = new OAuth2Client(GOOGLE_CLIENT_ID);
-const JWT_SECRET = "your_jwt_secret"; // Use a strong secret in production
+const JWT_SECRET = "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"; // Use a strong secret in production
 
 app.post("/api/auth/google", async (req, res) => {
   const { token } = req.body;

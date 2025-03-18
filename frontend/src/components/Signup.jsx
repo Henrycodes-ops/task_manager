@@ -22,7 +22,8 @@ export default function Login() {
 
       const initializeGoogleSignIn = () => {
         window.google.accounts.id.initialize({
-          client_id: "YOUR_GOOGLE_CLIENT_ID", // Replace with your actual client ID
+          client_id:
+            "1060221181168-tcqc0u99kb3kbnhjrburithdi5ga8cvo.apps.googleusercontent.com", // Replace with your actual client ID
           callback: handleGoogleResponse,
         });
 
