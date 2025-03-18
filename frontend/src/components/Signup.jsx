@@ -43,7 +43,7 @@ export default function Login() {
         window.google.accounts.id.renderButton(googleButtonRef.current, {
           theme: "outline",
           size: "large",
-          width: 380,
+          width: 'fit-content',
         });
       }
     };
@@ -68,18 +68,14 @@ export default function Login() {
         // Store the user session/token
         localStorage.setItem("token", data.token);
 
-        // Option 1: If using React Router
-        navigate("/home"); // Navigate to the home route (lowercase)
-
-        // Option 2: If not using React Router
-        // window.location.href = "/home"; // Use absolute path without the dot
+        // Navigate to home
+        navigate("/home");
       }
     } catch (error) {
       console.error("Authentication error:", error);
     }
   };
 
-  // Rest of your component remains the same
   return (
     <div className="login-container">
       <div className="spline-background">

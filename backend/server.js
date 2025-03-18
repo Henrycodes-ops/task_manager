@@ -1,7 +1,7 @@
-import express from "express";
-import dotenv from "dotenv";
-import path from "path";
-import { fileURLToPath } from "url";
+const express = require("express");
+const dotenv = require("dotenv");
+const path = require("path");
+const { fileURLToPath } = require("url");
 
 // Configure environment variables
 dotenv.config();

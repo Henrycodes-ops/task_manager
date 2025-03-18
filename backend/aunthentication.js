@@ -2,17 +2,24 @@ const express = require("express");
 const { OAuth2Client } = require("google-auth-library");
 const jwt = require("jsonwebtoken");
 const cors = require("cors");
+require("dotenv").config();
+
+const app = express();
 const port = 3001;
 
 
-const app = express();
+const corsOptions = {
+  origin: ["http://localhost:5173"], // Replace with your frontend URL
+  credentials: true,
+};
+app.use(cors(corsOptions));
 app.use(express.json());
 app.use(cors());
 
 const GOOGLE_CLIENT_ID =
   "1060221181168-tcqc0u99kb3kbnhjrburithdi5ga8cvo.apps.googleusercontent.com";
 const client = new OAuth2Client(GOOGLE_CLIENT_ID);
-const JWT_SECRET = "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"; // Use a strong secret in production
+const JWT_SECRET = process.env.JWT_SECRET; // Make sure this is set in your .env file
 
 app.post("/api/auth/google", async (req, res) => {
   const { token } = req.body;
@@ -56,11 +63,10 @@ app.post("/api/auth/google", async (req, res) => {
   }
 });
 
-// Mock function - implement according to your database
+// Mock function - Replace with actual database logic
 async function findOrCreateUser(userData) {
-  // Check if user exists in database
+  // Example: Check if user exists in database
   // If not, create a new user
-  // Return user object
   return {
     id: "123",
     email: userData.email,
