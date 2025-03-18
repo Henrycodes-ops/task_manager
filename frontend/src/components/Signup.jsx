@@ -1,12 +1,14 @@
 import { useContext, useState, useEffect, useRef } from "react";
 import { SplineBlob } from "./spline";
 import { SplineLoadContext } from "./splineLoadProvider";
+import { useNavigate } from "react-router-dom"; // Import this if you're using React Router
 
 export default function Login() {
   const { splineLoaded } = useContext(SplineLoadContext);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const googleButtonRef = useRef(null);
+  const navigate = useNavigate(); // Add this if using React Router
 
   useEffect(() => {
     // Load the Google Sign-In SDK
@@ -34,13 +36,14 @@ export default function Login() {
       if (window.google && googleButtonRef.current) {
         window.google.accounts.id.initialize({
           client_id:
-            "1060221181168-tcqc0u99kb3kbnhjrburithdi5ga8cvo.apps.googleusercontent.com", // Replace with your actual client ID
+            "1060221181168-tcqc0u99kb3kbnhjrburithdi5ga8cvo.apps.googleusercontent.com",
           callback: handleGoogleResponse,
         });
 
         window.google.accounts.id.renderButton(googleButtonRef.current, {
-          
-        
+          theme: "outline",
+          size: "large",
+          width: 380,
         });
       }
     };
@@ -64,22 +67,25 @@ export default function Login() {
       if (data.success) {
         // Store the user session/token
         localStorage.setItem("token", data.token);
-        // Redirect or update app state
-        window.location.href = "/home";
+
+        // Option 1: If using React Router
+        navigate("/home"); // Navigate to the home route (lowercase)
+
+        // Option 2: If not using React Router
+        // window.location.href = "/home"; // Use absolute path without the dot
       }
     } catch (error) {
       console.error("Authentication error:", error);
     }
   };
 
+  // Rest of your component remains the same
   return (
     <div className="login-container">
       <div className="spline-background">
-        {/* Always render SplineBlob, but it might be hidden until loaded */}
         <SplineBlob />
       </div>
 
-      {/* Login form shows immediately, with proper transitions when spline loads */}
       <div
         className={`login-form ${splineLoaded ? "with-background" : "loading"}`}
       >
