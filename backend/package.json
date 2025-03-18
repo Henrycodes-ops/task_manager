@@ -15,7 +15,6 @@
     "google-auth-library": "^9.15.1",
     "jsonwebtoken": "^9.0.2"
   },
-  "type": "module",
   "devDependencies": {
     "nodemon": "^3.1.9"
   }
