@@ -2,6 +2,7 @@ import { useContext, useState, useEffect, useRef } from "react";
 import { SplineBlob } from "./spline";
 import { SplineLoadContext } from "./splineLoadProvider";
 import { useNavigate, Link } from "react-router-dom";
+import { login } from "../utils/auth";
 
 export default function Signup() {
   const { splineLoaded } = useContext(SplineLoadContext);
@@ -84,8 +85,7 @@ export default function Signup() {
 
       if (data.success) {
         // Store the user session/token
-        localStorage.setItem("token", data.token);
-        localStorage.setItem("user", JSON.stringify(data.user));
+        login(data.token, data.user);
 
         // Navigate to home
         navigate("/home");
