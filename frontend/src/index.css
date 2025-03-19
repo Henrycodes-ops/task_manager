@@ -232,6 +232,10 @@ body {
   font-family: Barlow;
 }
 
+.error-message {
+  color: var( --light-secondary-color);
+}
+
 
 .form-group {
   margin-bottom: 20px;
