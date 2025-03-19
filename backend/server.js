@@ -1,54 +1,23 @@
-
-// // backend/server.js
-// const dotenv = require('dotenv');
-// const express = require('express');
-// const cors = require("cors");
-
-// const app = express();
-
-// // Load environment variables from .env file
-// dotenv.config();
-
-// // CORS configuration
-// const corsOptions = {
-//   origin: process.env.NODE_ENV === 'production'
-//     ? 'https://your-frontend-domain.com'
-//     : 'http://localhost:3000',
-//   credentials: true, // This allows cookies to be sent with requests
-//   methods: ['GET', 'POST', 'PUT', 'DELETE'],
-//   allowedHeaders: ['Content-Type', 'Authorization']
-// };
-
-// app.use(cors(corsOptions));
-
-// // Now you can access env variables like this
-// console.log("JWT Secret:", process.env.JWT_SECRET);
-
-// // Middleware
-// app.use(express.json());
-
-// // API Routes
-// app.use('/api', routes);
-
-// // Start server
-// const PORT = process.env.PORT || 3001;
-// app.listen(PORT, () => {
-//   console.log(`Server running on port ${PORT}`);
-// });
-
-
-// Choose one approach: Either CommonJS or ES6 Modules
-// Option 1: CommonJS (what you're currently using mostly)
+// backend/server.js
 const express = require("express");
 const dotenv = require("dotenv");
 const path = require("path");
-const cors = require("cors"); 
+const cors = require("cors");
+const mongoose = require("mongoose");
 
 // Configure environment variables
 dotenv.config();
 
 // Initialize Express app
 const app = express();
+
+// Connect to MongoDB
+mongoose
+  .connect(
+    process.env.MONGODB_URI || "mongodb://localhost:27017/your-project-name"
+  )
+  .then(() => console.log("MongoDB connected"))
+  .catch((err) => console.error("MongoDB connection error:", err));
 
 // Define the port number for the server to listen on
 const port = process.env.PORT || 3001;
@@ -57,12 +26,15 @@ const port = process.env.PORT || 3001;
 app.use(express.json());
 
 // Add CORS middleware
-app.use(cors({
-  origin: process.env.NODE_ENV === 'production' 
-    ? 'https://your-frontend-domain.com' 
-    : 'http://localhost:5173', // Your Vite dev server port
-  credentials: true
-}));
+app.use(
+  cors({
+    origin:
+      process.env.NODE_ENV === "production"
+        ? "https://your-frontend-domain.com"
+        : "http://localhost:5173", // Your Vite dev server port
+    credentials: true,
+  })
+);
 
 // Import route files
 const authRoutes = require("./routes/authRoutes");
