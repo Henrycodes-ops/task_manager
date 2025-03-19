@@ -12,7 +12,5 @@ export default {
   },
   users: {
     profile: `${API_URL}/users/profile`,
-    // other user endpoints
   },
-  // Add other API endpoints here
 };

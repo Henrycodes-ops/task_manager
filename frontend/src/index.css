@@ -152,7 +152,8 @@ body {
   transition: color 0.3s ease;
 }
 
-.login-container {
+.login-container,
+.signup-container {
   position: relative;
   width: 100%;
   height: 100vh;
@@ -172,7 +173,8 @@ body {
 }
 
 /* Glassmorphism login form */
-.login-form {
+.login-form,
+.signup-form {
   position: relative;
   z-index: 10;
   width: 380px;
@@ -189,17 +191,20 @@ body {
   transition: all 0.3s ease, background 0.5s ease, border 0.5s ease, box-shadow 0.5s ease;
 }
 
-.login-form.with-background {
+.login-form.with-background,
+.signup-form.with-background {
   transform: translateY(0);
   opacity: 1;
 }
 
-.login-form.loading {
+.login-form.loading,
+.signup-form.loading {
   transform: translateY(10px);
   opacity: 0.8;
 }
 
-.login-form::before {
+.login-form::before,
+.signup-form::before {
   content: '';
   position: absolute;
   top: -2px;
@@ -214,7 +219,8 @@ body {
   transition: opacity 0.3s ease;
 }
 
-.login-form h2 {
+.login-form h2,
+.signup-form h2 {
   margin-top: 0;
   margin-bottom: 24px;
   font-size: 28px;
@@ -263,7 +269,8 @@ body {
   width: 100%;
 }
 
-.login-button {
+.login-button,
+.signup-button {
   width: 100%;
   padding: 14px;
   margin: 16px 0 8px;
@@ -281,7 +288,8 @@ body {
 
 }
 
-.login-button::before {
+.login-button::before
+.signup-button::before {
   content: '';
   position: absolute;
   top: 0;
@@ -297,17 +305,21 @@ body {
   transition: left 0.5s ease;
 }
 
-.login-button:hover {
+.login-button:hover,
+.signup-button:hover {
   background: var(--primary-dark);
   transform: translateY(-2px);
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
 }
 
-.login-button:hover::before {
+.login-button:hover::before
+.signup-button:hover::before
+ {
   left: 100%;
 }
 
-.login-button:active {
+.login-button:active
+.signup-button:active {
   transform: translateY(0);
 }
 
@@ -381,7 +393,8 @@ body {
   transition: background 0.3s ease, color 0.3s ease;
 }
 
-.signup-link {
+.signup-link,
+.login-link {
   text-align: center;
   margin-top: 24px;
   font-size: 14px;
@@ -390,7 +403,8 @@ body {
   font-family: BarlowRegular;
 }
 
-.signup-link a {
+.signup-link a,
+.login-link a {
   color: var(--accent-color);
   text-decoration: none;
   font-weight: 600;
@@ -398,7 +412,8 @@ body {
   position: relative;
 }
 
-.signup-link a::after {
+.signup-link a::after,
+.login-link a::after {
   content: '';
   position: absolute;
   bottom: -2px;
@@ -409,7 +424,8 @@ body {
   transition: width 0.3s ease;
 }
 
-.signup-link a:hover::after {
+.signup-link a:hover::after,
+.login-link a:hover::after {
   width: 100%;
 }
 
@@ -461,12 +477,14 @@ body {
 
 /* Responsive adjustments */
 @media (max-width: 480px) {
-  .login-form {
+  .login-form,
+  .signup-form {
     width: 85%;
     padding: 30px;
   }
   
-  .login-form h2 {
+  .login-form h2,
+  .signup-form h2 {
     font-size: 24px;
   }
   
@@ -477,7 +495,8 @@ body {
 
 /* Additional light mode specific adjustments */
 @media (prefers-color-scheme: light) {
-  .login-form {
+  .login-form,
+  .signup-form {
     box-shadow: 
       0 10px 30px rgba(0, 0, 0, 0.08),
       0 6px 12px rgba(0, 0, 0, 0.05),
@@ -485,6 +504,7 @@ body {
   }
   
   .login-button,
+  .signup-button,
   .signUpWithGoogle {
     box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
   }
@@ -492,18 +512,21 @@ body {
 
 /* Additional dark mode specific adjustments */
 @media (prefers-color-scheme: dark) {
-  .login-form {
+  .login-form,
+  .signup-form {
     box-shadow: 
       0 10px 30px rgba(0, 0, 0, 0.2),
       0 6px 12px rgba(0, 0, 0, 0.15),
       inset 0 1px 1px rgba(255, 255, 255, 0.05);
   }
   
-  .login-button {
+  .login-button,
+  .signup-button {
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
   }
   
-  .login-form::before {
+  .login-form::before
+  .signup-form::before {
     opacity: 0.4;
   }
 }

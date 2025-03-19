@@ -2,11 +2,25 @@ import { useContext, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { SplineBlob } from "./spline";
 import { SplineLoadContext } from "./splineLoadProvider";
+import { fetchWithAuth } from "../utils/api";
+import api from "../config/api";
+import '../app.css'
 
 export default function Home() {
   const { splineLoaded } = useContext(SplineLoadContext);
   const [user, setUser] = useState(null);
   const navigate = useNavigate();
+
+  const fetchProfile = async () => {
+    try {
+      const data = await fetchWithAuth(api.users.profile);
+      if (data.success) {
+        setUserProfile(data.user);
+      }
+    } catch (error) {
+      console.error("Error fetching profile:", error);
+    }
+  };
 
   useEffect(() => {
     // Check if user is logged in

@@ -1,19 +1,19 @@
 import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 import Header from "./components/header";
-// import Task from "./components/task";
 import SplineContainer from "./components/spline";
-// import Home from "./components/home";
-import Login from "./components/Signup";
 import { SplineLoadProvider } from "./components/splineLoadProvider";
+import Home from "./components/home";
+import Login from "./components/login";
+import Signup from "./components/signup";
 
 export default function TaskManager() {
   return (
-    <SplineLoadProvider>
-      <Router>
+    <Router>
+      <SplineLoadProvider>
         <Routes>
           <Route
             path="/"
-            element={ 
+            element={
               <main className="appContainer">
                 <Header />
                 <SplineContainer />
@@ -21,9 +21,12 @@ export default function TaskManager() {
             }
           />
           <Route path="/login" element={<Login />} />
+          <Route path="/home" element={<Home />} />
+          <Route path="/login" element={<Login />} />
+          <Route path="/signup" element={<Signup />} />
         </Routes>
-      </Router>
-    </SplineLoadProvider>
+      </SplineLoadProvider>
+    </Router>
   );
 }
  

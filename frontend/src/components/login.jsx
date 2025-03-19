@@ -2,28 +2,20 @@ import { useContext, useState, useEffect, useRef } from "react";
 import { SplineBlob } from "./spline";
 import { SplineLoadContext } from "./splineLoadProvider";
 import { useNavigate, Link } from "react-router-dom";
+import api from "../config/api";
 import { login } from "../utils/auth";
 
-export default function Signup() {
+
+
+
+export default function Login() {
   const { splineLoaded } = useContext(SplineLoadContext);
-  const [formData, setFormData] = useState({
-    name: "",
-    email: "",
-    password: "",
-    confirmPassword: "",
-  });
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
   const googleButtonRef = useRef(null);
   const navigate = useNavigate();
-
-  const handleChange = (e) => {
-    const { name, value } = e.target;
-    setFormData((prev) => ({
-      ...prev,
-      [name]: value,
-    }));
-  };
 
   useEffect(() => {
     // Load the Google Sign-In SDK
@@ -57,9 +49,8 @@ export default function Signup() {
         window.google.accounts.id.renderButton(googleButtonRef.current, {
           theme: "outline",
           size: "large",
-          width: 300,
-          text: "signup_with",
-          shape: "rectangular",
+          width: "fit-content",
+          text: "signin_with",
         });
       }
     };
@@ -72,7 +63,7 @@ export default function Signup() {
     setError("");
 
     try {
-      const result = await fetch("http://localhost:3001/api/auth/google", {
+      const result = await fetch(api.auth.login, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -85,7 +76,7 @@ export default function Signup() {
 
       if (data.success) {
         // Store the user session/token
-        login(data.token, data.user);
+        login(data.token, data.user)
 
         // Navigate to home
         navigate("/home");
@@ -100,41 +91,25 @@ export default function Signup() {
     }
   };
 
-  const handleSubmit = async (e) => {
+  const handleEmailLogin = async (e) => {
     e.preventDefault();
     setLoading(true);
     setError("");
 
     // Basic validation
-    if (!formData.name || !formData.email || !formData.password) {
-      setError("All fields are required");
-      setLoading(false);
-      return;
-    }
-
-    if (formData.password !== formData.confirmPassword) {
-      setError("Passwords do not match");
-      setLoading(false);
-      return;
-    }
-
-    if (formData.password.length < 6) {
-      setError("Password must be at least 6 characters");
+    if (!email || !password) {
+      setError("Email and password are required");
       setLoading(false);
       return;
     }
 
     try {
-      const result = await fetch("http://localhost:3001/api/auth/signup", {
+      const result = await fetch("http://localhost:3001/api/auth/login", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({
-          name: formData.name,
-          email: formData.email,
-          password: formData.password,
-        }),
+        body: JSON.stringify({ email, password }),
         credentials: "include",
       });
 
@@ -148,10 +123,10 @@ export default function Signup() {
         // Navigate to home
         navigate("/home");
       } else {
-        setError(data.message || "Registration failed");
+        setError(data.message || "Invalid email or password");
       }
     } catch (error) {
-      console.error("Signup error:", error);
+      console.error("Login error:", error);
       setError("Server error. Please try again later.");
     } finally {
       setLoading(false);
@@ -159,40 +134,25 @@ export default function Signup() {
   };
 
   return (
-    <div className="signup-container">
+    <div className="login-container">
       <div className="spline-background">
         <SplineBlob />
       </div>
 
       <div
-        className={`signup-form ${
-          splineLoaded ? "with-background" : "loading"
-        }`}
+        className={`login-form ${splineLoaded ? "with-background" : "loading"}`}
       >
-        <h2>Create an Account</h2>
+        <h2>Login</h2>
 
         {error && <div className="error-message">{error}</div>}
 
-        <form onSubmit={handleSubmit}>
-          <div className="form-group">
-            <input
-              type="text"
-              name="name"
-              placeholder="Full Name"
-              value={formData.name}
-              onChange={handleChange}
-              disabled={loading}
-              required
-            />
-          </div>
-
+        <form onSubmit={handleEmailLogin}>
           <div className="form-group">
             <input
               type="email"
-              name="email"
               placeholder="Email"
-              value={formData.email}
-              onChange={handleChange}
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
               disabled={loading}
               required
             />
@@ -201,40 +161,30 @@ export default function Signup() {
           <div className="form-group">
             <input
               type="password"
-              name="password"
               placeholder="Password"
-              value={formData.password}
-              onChange={handleChange}
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
               disabled={loading}
               required
               minLength={6}
             />
           </div>
 
-          <div className="form-group">
-            <input
-              type="password"
-              name="confirmPassword"
-              placeholder="Confirm Password"
-              value={formData.confirmPassword}
-              onChange={handleChange}
-              disabled={loading}
-              required
-              minLength={6}
-            />
-          </div>
-
-          <button type="submit" className="signup-button" disabled={loading}>
-            {loading ? "Creating Account..." : "Sign Up"}
+          <button type="submit" className="login-button" disabled={loading}>
+            {loading ? "Logging in..." : "Login"}
           </button>
         </form>
+
+        <div className="forgot-password">
+          <Link to="/forgot-password">Forgot password?</Link>
+        </div>
 
         <div className="separator">or</div>
 
         <div ref={googleButtonRef} className="google-signin-container"></div>
 
-        <p className="login-link">
-          Already have an account? <Link to="/login">Login</Link>
+        <p className="signup-link">
+          Don&apos;t have an account? <Link to="/signup">Sign up</Link>
         </p>
       </div>
 
