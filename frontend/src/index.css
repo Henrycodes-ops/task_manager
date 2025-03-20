@@ -233,7 +233,11 @@ body {
 }
 
 .error-message {
-  color: var( --light-secondary-color);
+  color: #ff0033;
+  font-size: 14px;
+  font-weight: 500;
+  margin: 8px 0;
+  font-family: BarlowMedium;
 }
 
 

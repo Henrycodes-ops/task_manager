@@ -63,7 +63,7 @@ export default function Home() {
         {user && (
           <div className="user-welcome">
             <h2>Hello, {user.name}!</h2>
-            <p>You're logged in with: {user.email}</p>
+            <p>You&apos;re logged in with: {user.email}</p>
           </div>
         )}
 
