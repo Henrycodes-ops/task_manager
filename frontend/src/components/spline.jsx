@@ -39,3 +39,22 @@ export function SplineBlob() {
     </div>
   );
 }
+
+export function HomeBackground() {
+  const [loaded, setLoaded] = useState(false);
+  const { setSplineLoaded } = useContext(SplineLoadContext);
+
+  const handleSplineLoad = () => {
+    setLoaded(true);
+    setSplineLoaded(true);
+  };
+
+  return (
+    <div className="splineBlob">
+      <Spline
+        scene="https://prod.spline.design/RlUiezX2Zuk-CRiu/scene.splinecode"
+        onLoad={handleSplineLoad}
+      />
+    </div>
+  );
+}

@@ -4,12 +4,12 @@ const { OAuth2Client } = require("google-auth-library");
 const jwt = require("jsonwebtoken");
 const bcrypt = require("bcrypt");
 const router = express.Router();
-const User = require("../models/User"); // Make sure this path is correct
+const User = require("../models/user"); // Import the User model
 
 const GOOGLE_CLIENT_ID =
   "1060221181168-tcqc0u99kb3kbnhjrburithdi5ga8cvo.apps.googleusercontent.com";
 const client = new OAuth2Client(GOOGLE_CLIENT_ID);
-const JWT_SECRET = process.env.JWT_SECRET || "your-secret-key"; // Use a default if not set
+const JWT_SECRET = process.env.JWT_SECRET || "jwt-secret"; // Make sure to use env variables in production
 
 // Google OAuth authentication
 router.post("/google", async (req, res) => {

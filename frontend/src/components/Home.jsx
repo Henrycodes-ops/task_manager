@@ -1,6 +1,6 @@
 import { useContext, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { SplineBlob } from "./spline";
+import { HomeBackground, SplineBlob } from "./spline";
 import { SplineLoadContext } from "./splineLoadProvider";
 import { fetchWithAuth } from "../utils/api";
 import api from "../config/api";
@@ -41,16 +41,16 @@ export default function Home() {
     }
   }, [navigate]);
 
-  const handleLogout = () => {
-    localStorage.removeItem("user");
-    localStorage.removeItem("token");
-    navigate("/login");
-  };
+  // const handleLogout = () => {
+  //   localStorage.removeItem("user");
+  //   localStorage.removeItem("token");
+  //   navigate("/login");
+  // };
 
   return (
     <div className="home-container">
       <div className="spline-background">
-        <SplineBlob />
+        <HomeBackground />
       </div>
 
       <div
@@ -63,17 +63,11 @@ export default function Home() {
         {user && (
           <div className="user-welcome">
             <h2>Hello, {user.name}!</h2>
-            <p>You&apos;re logged in with: {user.email}</p>
+           
           </div>
         )}
 
-        <div className="dashboard-actions">
-          <button className="action-button">View Profile</button>
-          <button className="action-button">My Settings</button>
-          <button className="logout-button" onClick={handleLogout}>
-            Logout
-          </button>
-        </div>
+       
       </div>
 
       {!splineLoaded && (
