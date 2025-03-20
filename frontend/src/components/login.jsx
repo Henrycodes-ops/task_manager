@@ -117,8 +117,7 @@ export default function Login() {
 
       if (data.success) {
         // Store the user session/token
-        localStorage.setItem("token", data.token);
-        localStorage.setItem("user", JSON.stringify(data.user));
+        login(data.token, data.user);
 
         // Navigate to home
         navigate("/home");
