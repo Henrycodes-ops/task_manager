@@ -48,7 +48,7 @@ export default function Home() {
   // };
 
   return (
-    <div className="home-container">
+    <div className="">
       <div className="spline-background">
         <HomeBackground />
       </div>
@@ -58,11 +58,12 @@ export default function Home() {
           splineLoaded ? "with-background" : "loading"
         }`}
       >
-        <h1>Welcome to Your Dashboard</h1>
+       
 
         {user && (
           <div className="user-welcome">
-            <h2>Hello, {user.name}!</h2>
+            {/* <h2>Hello, {user.name}!</h2> */}
+            <img src={user.profilePicture} alt={`${user.name}'s profile`} />
            
           </div>
         )}
