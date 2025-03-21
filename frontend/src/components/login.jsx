@@ -5,9 +5,6 @@ import { useNavigate, Link } from "react-router-dom";
 import api from "../config/api";
 import { login } from "../utils/auth";
 
-
-
-
 export default function Login() {
   const { splineLoaded } = useContext(SplineLoadContext);
   const [email, setEmail] = useState("");
@@ -63,6 +60,7 @@ export default function Login() {
     setError("");
 
     try {
+      // Make sure this endpoint matches your backend route
       const result = await fetch(api.auth.login, {
         method: "POST",
         headers: {
@@ -76,7 +74,7 @@ export default function Login() {
 
       if (data.success) {
         // Store the user session/token
-        login(data.token, data.user)
+        login(data.token, data.user);
 
         // Navigate to home
         navigate("/home");
@@ -104,7 +102,7 @@ export default function Login() {
     }
 
     try {
-      const result = await fetch("http://localhost:3001/api/auth/login", {
+      const result = await fetch(api.auth.login, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

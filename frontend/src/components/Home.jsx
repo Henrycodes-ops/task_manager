@@ -1,6 +1,6 @@
 import { useContext, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { HomeBackground, SplineBlob } from "./spline";
+import { HomeBackground } from "./spline";
 import { SplineLoadContext } from "./splineLoadProvider";
 import { fetchWithAuth } from "../utils/api";
 import api from "../config/api";
@@ -48,7 +48,7 @@ export default function Home() {
   // };
 
   return (
-    <div className="">
+    <div className="home-container">
       <div className="spline-background">
         <HomeBackground />
       </div>
@@ -63,7 +63,8 @@ export default function Home() {
         {user && (
           <div className="user-welcome">
             {/* <h2>Hello, {user.name}!</h2> */}
-            <img src={user.profilePicture} alt={`${user.name}'s profile`} />
+            <p >{user.email}</p> 
+          <img src={user.picture} alt="" />  
            
           </div>
         )}

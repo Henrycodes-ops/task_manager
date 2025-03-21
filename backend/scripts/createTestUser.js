@@ -14,7 +14,7 @@ mongoose
   .catch((err) => console.error("MongoDB connection error:", err));
 
 // Import User model
-const User = require("../models/User");
+const User = require("../models/user");
 
 async function createTestUser() {
   try {

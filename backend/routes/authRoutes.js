@@ -4,12 +4,19 @@ const { OAuth2Client } = require("google-auth-library");
 const jwt = require("jsonwebtoken");
 const bcrypt = require("bcrypt");
 const router = express.Router();
-const User = require("../models/user"); // Import the User model
+const User = require("../models/user"); // Make sure this path is correct
+console.log("User model loaded:", !!User);
+
+router.use((req, res, next) => {
+  console.log(`Auth route accessed: ${req.method} ${req.path}`);
+  console.log("Request body:", req.body);
+  next();
+});
 
 const GOOGLE_CLIENT_ID =
   "1060221181168-tcqc0u99kb3kbnhjrburithdi5ga8cvo.apps.googleusercontent.com";
 const client = new OAuth2Client(GOOGLE_CLIENT_ID);
-const JWT_SECRET = process.env.JWT_SECRET || "jwt-secret"; // Make sure to use env variables in production
+const JWT_SECRET = process.env.JWT_SECRET || "your-secure-jwt-secret"; // Fixed the circular reference
 
 // Google OAuth authentication
 router.post("/google", async (req, res) => {
@@ -116,6 +123,14 @@ router.post("/login", async (req, res) => {
       return res.status(401).json({
         success: false,
         message: "Invalid email or password",
+      });
+    }
+
+    // Check if user has a password (Google users might not)
+    if (!user.password) {
+      return res.status(401).json({
+        success: false,
+        message: "This account uses Google Sign-In. Please login with Google.",
       });
     }
 
