@@ -115,11 +115,15 @@ router.post("/signup", async (req, res) => {
 // Email/password login
 router.post("/login", async (req, res) => {
   const { email, password } = req.body;
+  console.log(`Login attempt for email: ${email}`);
+  
 
   try {
     // Find user by email
     const user = await findUserByEmail(email);
+    console.log("User found:", !!user); // Log if user was found
     if (!user) {
+      console.log("No user found with this email");
       return res.status(401).json({
         success: false,
         message: "Invalid email or password",
@@ -128,6 +132,7 @@ router.post("/login", async (req, res) => {
 
     // Check if user has a password (Google users might not)
     if (!user.password) {
+      console.log("User has no password (Google user)");
       return res.status(401).json({
         success: false,
         message: "This account uses Google Sign-In. Please login with Google.",
@@ -136,7 +141,10 @@ router.post("/login", async (req, res) => {
 
     // Check password
     const passwordMatch = await bcrypt.compare(password, user.password);
+    console.log("Password match:", passwordMatch);
+
     if (!passwordMatch) {
+       console.log("Password doesn't match");
       return res.status(401).json({
         success: false,
         message: "Invalid email or password",

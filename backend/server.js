@@ -15,7 +15,7 @@ const app = express();
 // Connect to MongoDB
 mongoose
   .connect(
-    process.env.MONGODB_URI || "mongodb://localhost:27017/your-project-name"
+    process.env.MONGODB_URI || "mongodb://localhost:27017/cortex"
   )
   .then(() => console.log("MongoDB connected"))
   .catch((err) => console.error("MongoDB connection error:", err));
@@ -42,6 +42,11 @@ const authRoutes = require("./routes/authRoutes");
 
 // Mount API routes
 app.use("/api/auth", authRoutes);
+
+app.use((req, res, next) => {
+  res.setHeader("Cross-Origin-Opener-Policy", "same-origin-allow-popups");
+  next();
+});
 
 // Basic status route
 app.get("/api/status", (req, res) => {
