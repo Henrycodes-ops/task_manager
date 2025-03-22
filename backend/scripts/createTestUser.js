@@ -38,6 +38,7 @@ async function createTestUser() {
 
     await testUser.save();
     console.log("Test user created successfully!");
+    
     console.log("Email: testuser@gmail.com");
     console.log("Password: password123");
   } catch (error) {
