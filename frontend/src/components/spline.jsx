@@ -52,7 +52,7 @@ export function HomeBackground() {
   return (
     <div className="splineBlob">
       <Spline
-        scene="https://prod.spline.design/RlUiezX2Zuk-CRiu/scene.splinecode"
+        scene="https://prod.spline.design/qNCG-6RvWhNaVArS/scene.splinecode"
         onLoad={handleSplineLoad}
       />
     </div>

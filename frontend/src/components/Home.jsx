@@ -63,7 +63,7 @@ export default function Home() {
         {user && (
           <div className="user-welcome">
             {/* <h2>Hello, {user.name}!</h2> */}
-            <p >{user.email}</p> 
+            <p >{user.name}</p> 
           <img src={user.picture} alt="" />  
            
           </div>
