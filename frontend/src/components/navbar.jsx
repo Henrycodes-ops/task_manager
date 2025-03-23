@@ -14,6 +14,10 @@ export default function Navbar() {
         </li>
         <li>
           <a href="./task.jsx">Contact</a>
+          
+        </li>
+        <li>
+          <a href="./task.jsx">Services</a>
         </li>
       </ul>
     </nav>
