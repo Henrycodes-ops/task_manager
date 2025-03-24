@@ -4,7 +4,9 @@ import { HomeBackground } from "./spline";
 import { SplineLoadContext } from "./splineLoadProvider";
 import { fetchWithAuth } from "../utils/api";
 import api from "../config/api";
-import '../app.css'
+import "../app.css";
+import "../components/css/dashboard.css";
+import Dashboard from "./Dashboard";
 
 export default function Home() {
   const { splineLoaded } = useContext(SplineLoadContext);
@@ -41,12 +43,6 @@ export default function Home() {
     }
   }, [navigate]);
 
-  // const handleLogout = () => {
-  //   localStorage.removeItem("user");
-  //   localStorage.removeItem("token");
-  //   navigate("/login");
-  // };
-
   return (
     <div className="home-container">
       <div className="spline-background">
@@ -54,22 +50,11 @@ export default function Home() {
       </div>
 
       <div
-        className={`home-content ${
+        className={`dashboard-wrapper ${
           splineLoaded ? "with-background" : "loading"
         }`}
       >
-       
-
-        {user && (
-          <div className="user-welcome">
-            {/* <h2>Hello, {user.name}!</h2> */}
-            <p >{user.name}</p> 
-          <img src={user.picture} alt="" />  
-           
-          </div>
-        )}
-
-       
+        {user && <Dashboard user={user} />}
       </div>
 
       {!splineLoaded && (

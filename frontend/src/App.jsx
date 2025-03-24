@@ -24,6 +24,7 @@ export default function TaskManager() {
           <Route path="/home" element={<Home />} />
           <Route path="/login" element={<Login />} />
           <Route path="/signup" element={<Signup />} />
+          <Route path="/" element={<h1>Not Found</h1>} />
         </Routes>
       </SplineLoadProvider>
     </Router>
