@@ -30,6 +30,7 @@ router.post("/google", async (req, res) => {
     });
 
     const payload = ticket.getPayload();
+    console.log("Google token payload:", payload); // Log the payload details
 
     // Find or create user in your database
     const user = await findOrCreateUser({

@@ -3,14 +3,7 @@ import { FiFile, FiImage, FiCode, FiFileText } from "react-icons/fi";
 
 const FilesList = () => {
   const files = [
-    {
-      name: "Layout and Pages templates.psd",
-      size: "12.5 MB",
-      icon: <FiImage />,
-    },
-    { name: "Sample UI Kit.fig", size: "24.2 MB", icon: <FiCode /> },
-    { name: "Sample mockup.sketch", size: "8.1 MB", icon: <FiImage /> },
-    { name: "Technical Specs.fig", size: "2.3 MB", icon: <FiFileText /> },
+ 
   ];
 
   return (

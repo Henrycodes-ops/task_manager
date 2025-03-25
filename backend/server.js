@@ -8,15 +8,12 @@ const mongoose = require("mongoose");
 // Configure environment variables
 dotenv.config();
 
-
 // Initialize Express app
 const app = express();
 
 // Connect to MongoDB
 mongoose
-  .connect(
-    process.env.MONGODB_URI || "mongodb://localhost:27017/cortex"
-  )
+  .connect(process.env.MONGODB_URI || "mongodb://localhost:27017/cortex")
   .then(() => console.log("MongoDB connected"))
   .catch((err) => console.error("MongoDB connection error:", err));
 
@@ -29,11 +26,10 @@ app.use(express.json());
 // Add CORS middleware
 app.use(
   cors({
-    origin:
-      process.env.NODE_ENV === "production"
-        ? "https://your-frontend-domain.com"
-        : "http://localhost:5173", // Your Vite dev server port
+    origin: ["http://localhost:5173", "http://dev.example.com:5173"],
     credentials: true,
+    methods: ["GET", "POST", "OPTIONS"],
+    allowedHeaders: ["Content-Type", "Authorization"],
   })
 );
 
