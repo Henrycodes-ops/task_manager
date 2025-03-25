@@ -3,9 +3,7 @@ import ProjectCard from "./ProjectCard";
 
 const TeamSection = () => {
   const projects = [
-    { title: "UX UI Design", progress: 65, members: 3 },
-    { title: "Marketing", progress: 48, members: 4 },
-    { title: "Development", progress: 72, members: 5 },
+    
   ];
 
   return (
