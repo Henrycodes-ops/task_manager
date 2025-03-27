@@ -46,7 +46,7 @@ export default function Home() {
   return (
     <div className="home-container">
       <div className="spline-background">
-        <HomeBackground />
+        {/* <HomeBackground /> */}
       </div>
 
       <div

@@ -161,12 +161,12 @@ export default function Signup() {
   return (
     <div className="signup-container">
       <div className="spline-background">
-        <SplineBlob />
+        {/* <SplineBlob /> */}
       </div>
 
       <div
         className={`signup-form ${
-          splineLoaded ? "with-background" : "loading"
+          splineLoaded || "with-background"
         }`}
       >
         <h2 >Create an Account</h2>
