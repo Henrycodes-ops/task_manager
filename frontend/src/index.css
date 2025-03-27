@@ -36,7 +36,7 @@ body {
   position: absolute;
   bottom: 0;
   text-decoration: none;
-    opacity: 0;
+  opacity: 0;
   animation: fadeIn 3s forwards;
 
   &:hover {
@@ -45,8 +45,12 @@ body {
 }
 
 @keyframes fadeIn {
-  from { opacity: 0; }
-  to { opacity: 1; }
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
 }
 
 .splineBlob {
@@ -71,7 +75,6 @@ body {
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 }
 
-
 /* Base styles with theme variables */
 :root {
   /* Light mode variables */
@@ -89,7 +92,7 @@ body {
   --light-secondary-light: rgba(246, 168, 210, 0.2);
   --light-accent-color: rgba(118, 223, 188, 0.9);
   --light-accent-light: rgba(118, 223, 188, 0.3);
-  
+
   /* Dark mode variables */
   --dark-glass-bg: rgba(30, 30, 40, 0.7);
   --dark-glass-border: rgba(60, 60, 70, 0.3);
@@ -105,7 +108,7 @@ body {
   --dark-secondary-light: rgba(246, 168, 210, 0.3);
   --dark-accent-color: rgba(118, 223, 188, 1);
   --dark-accent-light: rgba(118, 223, 188, 0.4);
-  
+
   /* Default to light mode */
   --glass-bg: var(--light-glass-bg);
   --glass-border: var(--light-glass-border);
@@ -184,11 +187,10 @@ body {
   -webkit-backdrop-filter: blur(12px);
   background: var(--glass-bg);
   border: 1px solid var(--glass-border);
-  box-shadow: 
-    0 8px 32px var(--glass-shadow),
-    0 4px 8px rgba(0, 0, 0, 0.05),
+  box-shadow: 0 8px 32px var(--glass-shadow), 0 4px 8px rgba(0, 0, 0, 0.05),
     inset 0 1px 1px rgba(255, 255, 255, 0.1);
-  transition: all 0.3s ease, background 0.5s ease, border 0.5s ease, box-shadow 0.5s ease;
+  transition: all 0.3s ease, background 0.5s ease, border 0.5s ease,
+    box-shadow 0.5s ease;
 }
 
 .login-form.with-background,
@@ -205,13 +207,19 @@ body {
 
 .login-form::before,
 .signup-form::before {
-  content: '';
+  content: "";
   position: absolute;
   top: -2px;
   left: -2px;
   right: -2px;
   bottom: -2px;
-  background: linear-gradient(45deg, var(--primary-light), var(--secondary-light), var(--accent-light), transparent);
+  background: linear-gradient(
+    45deg,
+    var(--primary-light),
+    var(--secondary-light),
+    var(--accent-light),
+    transparent
+  );
   z-index: -1;
   border-radius: 26px;
   opacity: 0.6;
@@ -239,7 +247,6 @@ body {
   margin: 8px 0;
   font-family: BarlowMedium;
 }
-
 
 .form-group {
   margin-bottom: 20px;
@@ -293,12 +300,10 @@ body {
   position: relative;
   overflow: hidden;
   font-family: Barlow;
-
 }
 
-.login-button::before
-.signup-button::before {
-  content: '';
+.login-button::before .signup-button::before {
+  content: "";
   position: absolute;
   top: 0;
   left: -100%;
@@ -320,14 +325,11 @@ body {
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
 }
 
-.login-button:hover::before
-.signup-button:hover::before
- {
+.login-button:hover::before .signup-button:hover::before {
   left: 100%;
 }
 
-.login-button:active
-.signup-button:active {
+.login-button:active .signup-button:active {
   transform: translateY(0);
 }
 
@@ -343,7 +345,7 @@ body {
 
 .separator::before,
 .separator::after {
-  content: '';
+  content: "";
   flex: 1;
   border-bottom: 1px solid var(--glass-border);
   transition: border-color 0.3s ease;
@@ -357,7 +359,8 @@ body {
   margin-left: 10px;
 }
 
-.signUpWithGoogle {
+.signUpWithGoogle,
+.github-signin-button {
   display: flex;
   align-items: center;
   justify-content: center;
@@ -377,13 +380,15 @@ body {
   text-transform: uppercase;
 }
 
-.signUpWithGoogle:hover {
+.signUpWithGoogle:hover,
+.github-signin-button:hover {
   background: var(--secondary-color);
   transform: translateY(-2px);
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
 }
 
-.signUpWithGoogle:active {
+.signUpWithGoogle:active,
+.github-signin-button:active {
   transform: translateY(0);
 }
 
@@ -422,7 +427,7 @@ body {
 
 .signup-link a::after,
 .login-link a::after {
-  content: '';
+  content: "";
   position: absolute;
   bottom: -2px;
   left: 0;
@@ -490,12 +495,12 @@ body {
     width: 85%;
     padding: 30px;
   }
-  
+
   .login-form h2,
   .signup-form h2 {
     font-size: 24px;
   }
-  
+
   .form-group input {
     padding: 12px 14px;
   }
@@ -505,12 +510,10 @@ body {
 @media (prefers-color-scheme: light) {
   .login-form,
   .signup-form {
-    box-shadow: 
-      0 10px 30px rgba(0, 0, 0, 0.08),
-      0 6px 12px rgba(0, 0, 0, 0.05),
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08), 0 6px 12px rgba(0, 0, 0, 0.05),
       inset 0 1px 1px rgba(255, 255, 255, 0.4);
   }
-  
+
   .login-button,
   .signup-button,
   .signUpWithGoogle {
@@ -522,24 +525,16 @@ body {
 @media (prefers-color-scheme: dark) {
   .login-form,
   .signup-form {
-    box-shadow: 
-      0 10px 30px rgba(0, 0, 0, 0.2),
-      0 6px 12px rgba(0, 0, 0, 0.15),
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2), 0 6px 12px rgba(0, 0, 0, 0.15),
       inset 0 1px 1px rgba(255, 255, 255, 0.05);
   }
-  
+
   .login-button,
   .signup-button {
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
   }
-  
-  .login-form::before
-  .signup-form::before {
+
+  .login-form::before .signup-form::before {
     opacity: 0.4;
   }
 }
-
-
-
-
-

@@ -1,10 +1,10 @@
 .home-container {
-  position: relative;
+  position: absolute;
   width: 100%;
   min-height: 100vh;
-  display: flex;
+  /* display: flex;
   justify-content: center;
-  align-items: center;
+  align-items: center; */
   background-color: transparent;
 }
 
@@ -25,8 +25,8 @@
   border: 1px solid rgba(255, 255, 255, 0.08);
   padding: 2.5rem;
   z-index: 10;
-  width: 90%;
-  max-width: 800px;
+  width: 100%;
+  max-width: 100%;
   text-align: center;
   transition: all 0.4s ease;
   color: rgba(255, 255, 255, 0.92);

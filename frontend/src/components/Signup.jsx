@@ -100,6 +100,67 @@ export default function Signup() {
     }
   };
 
+  // Add GitHub OAuth login
+  const handleGitHubLogin = () => {
+    const GITHUB_CLIENT_ID = "Ov23liXr1PjkF9aUE4zq"; // Replace with your GitHub Client ID
+    const REDIRECT_URI = "http://localhost:5173/signup"; // Your frontend signup page URL
+    const SCOPE = "user:email"; // Request user email permission
+
+    const githubOAuthUrl = `https://github.com/login/oauth/authorize?client_id=${GITHUB_CLIENT_ID}&redirect_uri=${REDIRECT_URI}&scope=${SCOPE}`;
+
+    // Store the current path to redirect back after GitHub auth
+    localStorage.setItem("preAuthPath", window.location.pathname);
+
+    // Redirect to GitHub OAuth
+    window.location.href = githubOAuthUrl;
+  };
+
+  // New useEffect to handle GitHub OAuth callback
+  useEffect(() => {
+    const handleGitHubCallback = async () => {
+      const urlParams = new URLSearchParams(window.location.search);
+      const code = urlParams.get("code");
+
+      if (code) {
+        setLoading(true);
+        setError("");
+
+        try {
+          const result = await fetch("http://localhost:3001/api/auth/github", {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({ code }),
+            credentials: "include",
+          });
+
+          const data = await result.json();
+
+          if (data.success) {
+            // Store the user session/token
+            login(data.token, data.user);
+
+            // Retrieve and redirect to the pre-auth path or default to home
+            const prePath = localStorage.getItem("preAuthPath") || "/home";
+            localStorage.removeItem("preAuthPath");
+
+            navigate(prePath);
+          } else {
+            setError(data.message || "GitHub authentication failed");
+          }
+        } catch (error) {
+          console.error("GitHub authentication error:", error);
+          setError("Server error. Please try again later.");
+        } finally {
+          setLoading(false);
+        }
+      }
+    };
+
+    handleGitHubCallback();
+  }, [navigate]);
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
@@ -161,18 +222,16 @@ export default function Signup() {
   return (
     <div className="signup-container">
       <div className="spline-background">
-        {/* <SplineBlob /> */}
+        <SplineBlob />
       </div>
 
       <div
         className={`signup-form ${
-          splineLoaded || "with-background"
+          splineLoaded ? "with-background" : "loading"
         }`}
       >
-        <h2 >Create an Account</h2>
-
+        <h2>Create an Account</h2>
         {error && <div className="error-message">{error}</div>}
-
         <form onSubmit={handleSubmit}>
           <div className="form-group">
             <input
@@ -228,11 +287,15 @@ export default function Signup() {
             {loading ? "Creating Account..." : "Sign Up"}
           </button>
         </form>
-
         <div className="separator">or</div>
-
         <div ref={googleButtonRef} className="google-signin-container"></div>
-
+        <button
+          onClick={handleGitHubLogin}
+          className="github-signin-button"
+          disabled={loading}
+        >
+          Sign up with GitHub
+        </button>
         <p className="login-link">
           Already have an account? <Link to="/login">Login</Link>
         </p>

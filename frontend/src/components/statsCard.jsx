@@ -11,7 +11,7 @@ const StatsCard = ({ title, value, subtitle }) => {
           className="progress-bar"
           style={{
             width: `${
-              typeof value === "string" && value.includes("%") ? value : "75%"
+              typeof value === "string" && value.includes("%") ? value : {}
             }`,
           }}
         ></div>

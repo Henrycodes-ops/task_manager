@@ -8,7 +8,7 @@ export default function Header() {
 
   return (
     <div className="header">
-      {splineLoaded || (
+      {splineLoaded && (
         <Link to="/signup" className="getStarted">
           <span className="getSpan">Get Started</span>
         </Link>

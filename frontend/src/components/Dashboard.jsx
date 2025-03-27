@@ -14,6 +14,7 @@ import StatsCard from "./statsCard";
 import Chart from "./Chart";
 import TeamSection from "./TeamSection";
 import FilesList from "./FilesList";
+import { Link } from "react-router-dom";
 
 const Dashboard = ({ user }) => {
   return (
@@ -27,9 +28,13 @@ const Dashboard = ({ user }) => {
           <div className="menu-item active">
             <FiGrid /> Home
           </div>
+
           <div className="menu-item">
-            <FiCalendar /> Schedule
+            <Link to="/task">
+              <FiCalendar /> Schedule
+            </Link>
           </div>
+
           <div className="menu-item">
             <FiFolder /> Projects
           </div>
@@ -49,7 +54,7 @@ const Dashboard = ({ user }) => {
           />
           <div className="user-info">
             <div className="user-name">{user?.name || "Guest User"}</div>
-            <div className="user-role">+2</div>
+            <div className="user-role">{}</div>
           </div>
         </div>
       </div>
@@ -66,7 +71,7 @@ const Dashboard = ({ user }) => {
               <FiBell />
             </div>
             <div className="header-btn">
-              <FiPlus /> New
+              <FiPlus /> Ne
             </div>
           </div>
         </div>
@@ -74,19 +79,11 @@ const Dashboard = ({ user }) => {
         <div className="dashboard-stats">
           <StatsCard
             title="Ongoing Projects"
-            value="68.5%"
+            value=""
             subtitle="Compared to last month"
           />
-          <StatsCard
-            title="Total Tasks"
-            value="540"
-            subtitle="12 completed today"
-          />
-          <StatsCard
-            title="Active Users"
-            value="258"
-            subtitle="↑ 10% from yesterday"
-          />
+          <StatsCard title="Total Tasks" value="" subtitle="" />
+          <StatsCard title="Active Users" value="" subtitle="" />
         </div>
 
         <div className="dashboard-grid">
@@ -103,11 +100,7 @@ const Dashboard = ({ user }) => {
             </div>
 
             <div className="preview-image">
-              <img
-                src="/api/placeholder/400/200"
-                alt="Project preview"
-                style={{ width: "100%" }}
-              />
+              <img src="" alt="Project preview" style={{}} />
             </div>
 
             <div className="user-profile">

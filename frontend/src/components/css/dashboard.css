@@ -1,4 +1,16 @@
-/* styles/dashboard.css */
+@font-face {
+  font-family: montserratBold;
+  src: url(./Montserrat/static/Montserrat-Bold.ttf);
+}
+@font-face {
+  font-family: montserratSemiBold;
+  src: url(./Montserrat/static/Montserrat-SemiBold.ttf);
+}
+@font-face {
+  font-family: montserratMedium;
+  src: url(./Montserrat/static/Montserrat-Medium.ttf);
+}
+
 .dashboard-container {
   display: grid;
   grid-template-columns: 240px 1fr;
@@ -15,6 +27,8 @@
   display: flex;
   flex-direction: column;
   gap: 2rem;
+  font-family: montserratBold;
+  width: 100%;
 }
 
 .sidebar-logo {
@@ -69,6 +83,7 @@
   font-size: 1.8rem;
   font-weight: 600;
   color: rgba(255, 255, 255, 0.9);
+  font-family: monsterratBold;
 }
 
 .header-actions {
@@ -89,6 +104,7 @@
   gap: 0.5rem;
   cursor: pointer;
   transition: all 0.2s ease;
+  font-family: montserratSemiBold;
 }
 
 .header-btn:hover {
@@ -123,6 +139,7 @@
 
 .stats-card-title {
   font-size: 0.9rem;
+  font-family: montserratSemiBold;
   color: rgba(255, 255, 255, 0.6);
 }
 
@@ -149,6 +166,7 @@
   border: 1px solid rgba(255, 255, 255, 0.08);
   padding: 1.5rem;
   border-radius: 12px;
+  margin-top:  2rem;
 }
 
 .team-header {
@@ -160,6 +178,8 @@
 
 .team-title {
   font-size: 1.2rem;
+
+  font-family: montserratSemiBold;
   font-weight: 600;
   color: rgba(255, 255, 255, 0.9);
 }
@@ -196,7 +216,7 @@
 .files-list {
   display: flex;
   flex-direction: column;
-  gap: 0.75rem;
+  gap:2rem;
 }
 
 .file-item {
@@ -229,11 +249,13 @@
 
 .file-name {
   font-size: 0.9rem;
+  font-family: montserratSemiBold;
   color: rgba(255, 255, 255, 0.8);
 }
 
 .file-size {
   font-size: 0.8rem;
+  font-family: montserratMedium;
   color: rgba(255, 255, 255, 0.5);
 }
 
@@ -300,6 +322,7 @@
 }
 
 .user-name {
+  font-family: montserratSemiBold;
   font-size: 0.9rem;
   font-weight: 500;
   color: rgba(255, 255, 255, 0.9);
@@ -307,6 +330,7 @@
 
 .user-role {
   font-size: 0.8rem;
+  font-family: montserratMedium;
   color: rgba(255, 255, 255, 0.6);
 }
 
@@ -321,7 +345,6 @@
 
 .progress-bar {
   height: 100%;
-  background: linear-gradient(90deg, rgba(120, 120, 255, 0.7), rgba(180, 120, 255, 0.7));
   border-radius: 4px;
 }
 
@@ -329,7 +352,7 @@
   .dashboard-grid {
     grid-template-columns: 1fr;
   }
-  
+
   .team-grid {
     grid-template-columns: 1fr 1fr;
   }
@@ -339,15 +362,15 @@
   .dashboard-container {
     grid-template-columns: 1fr;
   }
-  
+
   .sidebar {
     display: none;
   }
-  
+
   .dashboard-stats {
     grid-template-columns: 1fr;
   }
-  
+
   .team-grid {
     grid-template-columns: 1fr;
   }
