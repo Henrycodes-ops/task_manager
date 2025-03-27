@@ -293,6 +293,7 @@ export default function Signup() {
           onClick={handleGitHubLogin}
           className="github-signin-button"
           disabled={loading}
+          
         >
           Sign up with GitHub
         </button>

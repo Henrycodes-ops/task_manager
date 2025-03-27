@@ -26,7 +26,11 @@ app.use(express.json());
 // Add CORS middleware
 app.use(
   cors({
-    origin: ["http://localhost:5173", "http://dev.example.com:5173"],
+    origin: [
+      "http://localhost:5173",
+      "http://dev.example.com:5173",
+      "https://accounts.google.com",
+    ],
     credentials: true,
     methods: ["GET", "POST", "OPTIONS"],
     allowedHeaders: ["Content-Type", "Authorization"],
@@ -43,6 +47,8 @@ app.use((req, res, next) => {
   res.setHeader("Cross-Origin-Opener-Policy", "same-origin-allow-popups");
   next();
 });
+
+app.use(express.urlencoded({ extended: true }));
 
 // Basic status route
 app.get("/api/status", (req, res) => {
