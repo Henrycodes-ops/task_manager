@@ -70,11 +70,7 @@ export default function Signup() {
       }
     };
 
-    // window.google.accounts.id.prompt((notification) => {
-    //   if (notification.isNotDisplayed()) {
-    //     console.log("One Tap not displayed");
-    //   }
-    // });
+   
 
     loadGoogleScript();
   }, []);
