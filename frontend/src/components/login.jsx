@@ -46,8 +46,9 @@ export default function Login() {
         window.google.accounts.id.renderButton(googleButtonRef.current, {
           theme: "outline",
           size: "large",
-          width: "fit-content",
+          width: 300,
           text: "signin_with",
+          borderRadius: 7
         });
       }
     };

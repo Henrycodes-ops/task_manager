@@ -60,7 +60,7 @@ app.get("/api/status", (req, res) => {
 // Catch-all handler for the root and other frontend routes
 app.get("*", (req, res) => {
   res.send(`
-  hi
+  hello this is my backend
   `);
 });
 
