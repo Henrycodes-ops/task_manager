@@ -31,6 +31,7 @@ app.use(
       "http://dev.example.com:5173",
       "https://accounts.google.com",
       "http://localhost:3001",
+      "http://localhost:5173/signup",
     ],
     credentials: true,
     methods: ["GET", "POST", "OPTIONS"],
