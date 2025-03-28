@@ -52,6 +52,12 @@ export default function Signup() {
           client_id:
             "1060221181168-tcqc0u99kb3kbnhjrburithdi5ga8cvo.apps.googleusercontent.com",
           callback: handleGoogleResponse,
+          allowed_parent_origin: [
+            "http://localhost:5173",
+            "http://localhost:3001",
+            "http://dev.example.com:5173",
+            "http://localhost:5173/signup",
+          ],
         });
 
         window.google.accounts.id.renderButton(googleButtonRef.current, {
@@ -63,6 +69,12 @@ export default function Signup() {
         });
       }
     };
+
+    // window.google.accounts.id.prompt((notification) => {
+    //   if (notification.isNotDisplayed()) {
+    //     console.log("One Tap not displayed");
+    //   }
+    // });
 
     loadGoogleScript();
   }, []);
@@ -293,7 +305,6 @@ export default function Signup() {
           onClick={handleGitHubLogin}
           className="github-signin-button"
           disabled={loading}
-          
         >
           Sign up with GitHub
         </button>

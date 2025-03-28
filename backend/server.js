@@ -30,6 +30,7 @@ app.use(
       "http://localhost:5173",
       "http://dev.example.com:5173",
       "https://accounts.google.com",
+      "http://localhost:3001",
     ],
     credentials: true,
     methods: ["GET", "POST", "OPTIONS"],
