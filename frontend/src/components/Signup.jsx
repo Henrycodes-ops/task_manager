@@ -1,4 +1,4 @@
-import { useContext, useState, useEffect, useRef } from "react";
+import { useContext, useState, useEffect, useRef, useCallback } from "react";
 import { SplineBlob } from "./spline";
 import { SplineLoadContext } from "./splineLoadProvider";
 import { useNavigate, Link } from "react-router-dom";
@@ -73,9 +73,9 @@ export default function Signup() {
    
 
     loadGoogleScript();
-  }, []);
+  }, [handleGoogleResponse]);
 
-  const handleGoogleResponse = async (response) => {
+  const handleGoogleResponse = useCallback(async (response) => {
     setLoading(true);
     setError("");
 
@@ -106,7 +106,7 @@ export default function Signup() {
     } finally {
       setLoading(false);
     }
-  };
+  }, [navigate]);
 
   // Add GitHub OAuth login
   const handleGitHubLogin = () => {
