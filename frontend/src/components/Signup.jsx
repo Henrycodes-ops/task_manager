@@ -306,7 +306,7 @@ export default function Signup() {
           className="github-signin-button"
           disabled={loading}
         >
-          Sign up with GitHub
+          Sign up with GitHub Account
         </button>
         <p className="login-link">
           Already have an account? <Link to="/login">Login</Link>
