@@ -25,6 +25,66 @@ export default function Signup() {
     }));
   };
 
+  const handleGoogleResponse = useCallback(
+    async (response) => {
+      setLoading(true);
+      setError("");
+
+      try {
+        const result = await fetch("http://localhost:3001/api/auth/google", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ token: response.credential }),
+          credentials: "include",
+        });
+
+        const data = await result.json();
+
+        if (data.success) {
+          // Store the user session/token
+          login(data.token, data.user);
+
+          // Navigate to home
+          navigate("/home");
+        } else {
+          setError(data.message || "Authentication failed");
+        }
+      } catch (error) {
+        console.error("Authentication error:", error);
+        setError("Server error. Please try again later.");
+      } finally {
+        setLoading(false);
+      }
+    },
+    [navigate]
+  );
+
+  const initializeGoogleSignIn = useCallback(() => {
+    if (window.google && googleButtonRef.current) {
+      window.google.accounts.id.initialize({
+        client_id:
+          "1060221181168-tcqc0u99kb3kbnhjrburithdi5ga8cvo.apps.googleusercontent.com",
+        callback: handleGoogleResponse,
+        allowed_parent_origin: [
+          "http://localhost:5173",
+          "http://localhost:3001",
+          "http://dev.example.com:5173",
+          "http://localhost:5173/signup",
+        ],
+      });
+
+      window.google.accounts.id.renderButton(googleButtonRef.current, {
+        theme: "outline",
+        size: "large",
+        width: "300px",
+        text: "signup_with",
+        shape: "rectangular",
+      });
+    }
+  }, [handleGoogleResponse]);
+
   useEffect(() => {
     // Load the Google Sign-In SDK
     const loadGoogleScript = () => {
@@ -46,71 +106,12 @@ export default function Signup() {
       script.onload = initializeGoogleSignIn;
     };
 
-    const initializeGoogleSignIn = () => {
-      if (window.google && googleButtonRef.current) {
-        window.google.accounts.id.initialize({
-          client_id:
-            "1060221181168-tcqc0u99kb3kbnhjrburithdi5ga8cvo.apps.googleusercontent.com",
-          callback: handleGoogleResponse,
-          allowed_parent_origin: [
-            "http://localhost:5173",
-            "http://localhost:3001",
-            "http://dev.example.com:5173",
-            "http://localhost:5173/signup",
-          ],
-        });
-
-        window.google.accounts.id.renderButton(googleButtonRef.current, {
-          theme: "outline",
-          size: "large",
-          width: 300,
-          text: "signup_with",
-          shape: "rectangular",
-        });
-      }
-    };
-
-   
-
     loadGoogleScript();
-  }, [handleGoogleResponse]);
-
-  const handleGoogleResponse = useCallback(async (response) => {
-    setLoading(true);
-    setError("");
-
-    try {
-      const result = await fetch("http://localhost:3001/api/auth/google", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ token: response.credential }),
-        credentials: "include",
-      });
-
-      const data = await result.json();
-
-      if (data.success) {
-        // Store the user session/token
-        login(data.token, data.user);
-
-        // Navigate to home
-        navigate("/home");
-      } else {
-        setError(data.message || "Authentication failed");
-      }
-    } catch (error) {
-      console.error("Authentication error:", error);
-      setError("Server error. Please try again later.");
-    } finally {
-      setLoading(false);
-    }
-  }, [navigate]);
+  }, [initializeGoogleSignIn]);
 
   // Add GitHub OAuth login
   const handleGitHubLogin = () => {
-    const GITHUB_CLIENT_ID = "Ov23liXr1PjkF9aUE4zq"; // Replace with your GitHub Client ID
+    const GITHUB_CLIENT_ID = "Ov23liXr1PjkF9aUE4zq"; // Replace with your full GitHub Client ID
     const REDIRECT_URI = "http://localhost:5173/signup"; // Your frontend signup page URL
     const SCOPE = "user:email"; // Request user email permission
 
@@ -169,6 +170,18 @@ export default function Signup() {
     handleGitHubCallback();
   }, [navigate]);
 
+  const validatePassword = (password) => {
+    // Check for minimum length
+    if (password.length < 6) {
+      return "Password must be at least 6 characters";
+    }
+
+    // Additional password strength checks could be added here
+    // For example, requiring uppercase, lowercase, numbers, etc.
+
+    return ""; // Empty string means valid
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
@@ -187,8 +200,9 @@ export default function Signup() {
       return;
     }
 
-    if (formData.password.length < 6) {
-      setError("Password must be at least 6 characters");
+    const passwordError = validatePassword(formData.password);
+    if (passwordError) {
+      setError(passwordError);
       setLoading(false);
       return;
     }
@@ -210,9 +224,8 @@ export default function Signup() {
       const data = await result.json();
 
       if (data.success) {
-        // Store the user session/token
-        localStorage.setItem("token", data.token);
-        localStorage.setItem("user", JSON.stringify(data.user));
+        // Use the same login function as social logins for consistency
+        login(data.token, data.user);
 
         // Navigate to home
         navigate("/home");
