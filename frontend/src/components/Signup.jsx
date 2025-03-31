@@ -62,7 +62,12 @@ export default function Signup() {
   );
 
   const initializeGoogleSignIn = useCallback(() => {
+    console.log("Initializing Google Sign-In");
+    console.log("Google object exists:", !!window.google);
+    console.log("Button ref exists:", !!googleButtonRef.current);
+
     if (window.google && googleButtonRef.current) {
+      console.log("Starting button rendering");
       window.google.accounts.id.initialize({
         client_id:
           "1060221181168-tcqc0u99kb3kbnhjrburithdi5ga8cvo.apps.googleusercontent.com",
@@ -71,7 +76,6 @@ export default function Signup() {
           "http://localhost:5173",
           "http://localhost:3001",
           "http://dev.example.com:5173",
-          "http://localhost:5173/signup",
         ],
       });
 
@@ -82,6 +86,10 @@ export default function Signup() {
         text: "signup_with",
         shape: "rectangular",
       });
+
+      console.log("Button rendering completed");
+    } else {
+      console.log("Missing requirements for Google button");
     }
   }, [handleGoogleResponse]);
 
@@ -94,7 +102,11 @@ export default function Signup() {
           'script[src="https://accounts.google.com/gsi/client"]'
         )
       ) {
-        initializeGoogleSignIn();
+        console.log("Google script already loaded, initializing");
+        // Add a small delay to ensure everything is properly loaded
+        setTimeout(() => {
+          initializeGoogleSignIn();
+        }, 500);
         return;
       }
 
@@ -102,12 +114,28 @@ export default function Signup() {
       script.src = "https://accounts.google.com/gsi/client";
       script.async = true;
       script.defer = true;
+      script.onload = () => {
+        console.log("Google script loaded");
+        // Add a small delay to ensure everything is properly loaded
+        setTimeout(() => {
+          initializeGoogleSignIn();
+        }, 500);
+      };
       document.body.appendChild(script);
-      script.onload = initializeGoogleSignIn;
     };
 
     loadGoogleScript();
   }, [initializeGoogleSignIn]);
+
+  // Ensure button rendering when ref is attached
+  useEffect(() => {
+    if (window.google && googleButtonRef.current) {
+      console.log("Ref or Google object changed, re-initializing");
+      setTimeout(() => {
+        initializeGoogleSignIn();
+      }, 300);
+    }
+  }, [googleButtonRef.current, initializeGoogleSignIn]);
 
   // Add GitHub OAuth login
   const handleGitHubLogin = () => {
@@ -309,7 +337,11 @@ export default function Signup() {
           </button>
         </form>
         <div className="separator">or</div>
-        <div ref={googleButtonRef} className="google-signin-container"></div>
+        <div
+          ref={googleButtonRef}
+          className="google-signin-container"
+          style={{ minHeight: "50px", width: "300px", margin: "0 auto" }}
+        ></div>
         <button
           onClick={handleGitHubLogin}
           className="github-signin-button"
