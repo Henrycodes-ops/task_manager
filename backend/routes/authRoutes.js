@@ -93,12 +93,25 @@ router.post("/github", async (req, res) => {
       },
     });
 
+    const emailsResponse = await axios.get(
+      "https://api.github.com/user/emails",
+      {
+        headers: {
+          Authorization: `token ${access_token}`,
+        },
+      }
+    );
     const githubUser = userResponse.data;
+
+    // Find primary email or use the first one
+    const userEmails = emailsResponse.data
+    const primaryEmail = userEmails.find(email => email.primary)?.email || userEmails[0]?.email || `${githubUser.login}@github.com`
+
 
     // Find or create user in your database
     const user = await findOrCreateGitHubUser({
       githubId: githubUser.id,
-      email: githubUser.email || `${githubUser.login}@github.com`,
+      email: primaryEmail,
       name: githubUser.name || githubUser.login,
       picture: githubUser.avatar_url,
     });

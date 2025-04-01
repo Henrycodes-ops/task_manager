@@ -3,6 +3,7 @@ import { SplineBlob } from "./spline";
 import { SplineLoadContext } from "./splineLoadProvider";
 import { useNavigate, Link } from "react-router-dom";
 import { login } from "../utils/auth";
+import {api } from "../config/api"
 
 export default function Signup() {
   const { splineLoaded } = useContext(SplineLoadContext);
@@ -31,7 +32,7 @@ export default function Signup() {
       setError("");
 
       try {
-        const result = await fetch("http://localhost:3001/api/auth/google", {
+        const result = await fetch(api.auth.google, {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
@@ -121,7 +122,7 @@ export default function Signup() {
         setError("");
 
         try {
-          const result = await fetch("http://localhost:3001/api/auth/github", {
+          const result = await fetch(api.auth.github, {
             method: "POST",
             headers: {
               "Content-Type": "application/json",
@@ -194,7 +195,7 @@ export default function Signup() {
     }
 
     try {
-      const result = await fetch("http://localhost:3001/api/auth/signup", {
+      const result = await fetch(api.auth.signup, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
