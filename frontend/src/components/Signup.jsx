@@ -103,7 +103,7 @@ export default function Signup() {
   }, [handleGoogleResponse]);
 
   const handleGitHubLogin = () => {
-    const GITHUB_CLIENT_ID = "Ov23liXr1PjkF9aUE4zq";
+    const GITHUB_CLIENT_ID = "Ov23li0Zf2FMhySKZ9uP";
     const REDIRECT_URI = "http://localhost:5173/signup";
     const SCOPE = "user:email";
     const githubOAuthUrl = `https://github.com/login/oauth/authorize?client_id=${GITHUB_CLIENT_ID}&redirect_uri=${REDIRECT_URI}&scope=${SCOPE}`;
