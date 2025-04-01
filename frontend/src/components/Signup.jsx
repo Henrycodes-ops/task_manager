@@ -43,10 +43,7 @@ export default function Signup() {
         const data = await result.json();
 
         if (data.success) {
-          // Store the user session/token
           login(data.token, data.user);
-
-          // Navigate to home
           navigate("/home");
         } else {
           setError(data.message || "Authentication failed");
@@ -61,52 +58,15 @@ export default function Signup() {
     [navigate]
   );
 
-  const initializeGoogleSignIn = useCallback(() => {
-    console.log("Initializing Google Sign-In");
-    console.log("Google object exists:", !!window.google);
-    console.log("Button ref exists:", !!googleButtonRef.current);
-
-    if (window.google && googleButtonRef.current) {
-      console.log("Starting button rendering");
-      window.google.accounts.id.initialize({
-        client_id:
-          "1060221181168-tcqc0u99kb3kbnhjrburithdi5ga8cvo.apps.googleusercontent.com",
-        callback: handleGoogleResponse,
-        allowed_parent_origin: [
-          "http://localhost:5173",
-          "http://localhost:3001",
-          "http://dev.example.com:5173",
-        ],
-      });
-
-      window.google.accounts.id.renderButton(googleButtonRef.current, {
-        theme: "outline",
-        size: "large",
-        width: "300px",
-        text: "signup_with",
-        shape: "rectangular",
-      });
-
-      console.log("Button rendering completed");
-    } else {
-      console.log("Missing requirements for Google button");
-    }
-  }, [handleGoogleResponse]);
-
   useEffect(() => {
-    // Load the Google Sign-In SDK
     const loadGoogleScript = () => {
-      // Check if the script is already loaded
       if (
         document.querySelector(
           'script[src="https://accounts.google.com/gsi/client"]'
         )
       ) {
-        console.log("Google script already loaded, initializing");
-        // Add a small delay to ensure everything is properly loaded
-        setTimeout(() => {
-          initializeGoogleSignIn();
-        }, 500);
+        console.log("Google script already loaded");
+        setTimeout(() => initializeGoogleSignIn(), 500);
         return;
       }
 
@@ -116,39 +76,37 @@ export default function Signup() {
       script.defer = true;
       script.onload = () => {
         console.log("Google script loaded");
-        // Add a small delay to ensure everything is properly loaded
-        setTimeout(() => {
-          initializeGoogleSignIn();
-        }, 500);
+        setTimeout(() => initializeGoogleSignIn(), 500);
       };
       document.body.appendChild(script);
     };
 
     loadGoogleScript();
-  }, [initializeGoogleSignIn]);
+  }, []);
 
-  // Ensure button rendering when ref is attached
-  useEffect(() => {
+  const initializeGoogleSignIn = useCallback(() => {
     if (window.google && googleButtonRef.current) {
-      console.log("Ref or Google object changed, re-initializing");
-      setTimeout(() => {
-        initializeGoogleSignIn();
-      }, 300);
+      window.google.accounts.id.initialize({
+        client_id:
+          "1060221181168-tcqc0u99kb3kbnhjrburithdi5ga8cvo.apps.googleusercontent.com",
+        callback: handleGoogleResponse,
+      });
+      window.google.accounts.id.renderButton(googleButtonRef.current, {
+        theme: "outline",
+        size: "large",
+      });
+      console.log("Google Sign-In button rendered");
+    } else {
+      console.log("Google Sign-In button could not be rendered");
     }
-  }, [googleButtonRef.current, initializeGoogleSignIn]);
+  }, [handleGoogleResponse]);
 
-  // Add GitHub OAuth login
   const handleGitHubLogin = () => {
-    const GITHUB_CLIENT_ID = "Ov23liXr1PjkF9aUE4zq"; // Replace with your full GitHub Client ID
-    const REDIRECT_URI = "http://localhost:5173/signup"; // Your frontend signup page URL
-    const SCOPE = "user:email"; // Request user email permission
-
+    const GITHUB_CLIENT_ID = "Ov23liXr1PjkF9aUE4zq";
+    const REDIRECT_URI = "http://localhost:5173/signup";
+    const SCOPE = "user:email";
     const githubOAuthUrl = `https://github.com/login/oauth/authorize?client_id=${GITHUB_CLIENT_ID}&redirect_uri=${REDIRECT_URI}&scope=${SCOPE}`;
-
-    // Store the current path to redirect back after GitHub auth
     localStorage.setItem("preAuthPath", window.location.pathname);
-
-    // Redirect to GitHub OAuth
     window.location.href = githubOAuthUrl;
   };
 
@@ -289,7 +247,6 @@ export default function Signup() {
               placeholder="Full Name"
               value={formData.name}
               onChange={handleChange}
-              disabled={loading}
               required
             />
           </div>
@@ -301,7 +258,6 @@ export default function Signup() {
               placeholder="Email"
               value={formData.email}
               onChange={handleChange}
-              disabled={loading}
               required
             />
           </div>
@@ -313,9 +269,7 @@ export default function Signup() {
               placeholder="Password"
               value={formData.password}
               onChange={handleChange}
-              disabled={loading}
               required
-              minLength={6}
             />
           </div>
 
@@ -326,9 +280,7 @@ export default function Signup() {
               placeholder="Confirm Password"
               value={formData.confirmPassword}
               onChange={handleChange}
-              disabled={loading}
               required
-              minLength={6}
             />
           </div>
 
@@ -337,28 +289,18 @@ export default function Signup() {
           </button>
         </form>
         <div className="separator">or</div>
-        <div
-          ref={googleButtonRef}
-          className="google-signin-container"
-          style={{ minHeight: "50px", width: "300px", margin: "0 auto" }}
-        ></div>
+        <div ref={googleButtonRef} className="google-signin-container"></div>
         <button
           onClick={handleGitHubLogin}
           className="github-signin-button"
           disabled={loading}
         >
-          Sign up with GitHub Account
+          Sign up with GitHub
         </button>
         <p className="login-link">
           Already have an account? <Link to="/login">Login</Link>
         </p>
       </div>
-
-      {!splineLoaded && (
-        <div className="loading-overlay">
-          <div className="loader"></div>
-        </div>
-      )}
     </div>
   );
 }

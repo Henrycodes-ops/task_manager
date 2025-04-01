@@ -62,7 +62,7 @@ export default function Login() {
 
     try {
       // Make sure this endpoint matches your backend route
-      const result = await fetch(api.auth.login, {
+      const result = await fetch(api.auth.google, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
