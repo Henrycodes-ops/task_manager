@@ -149,6 +149,10 @@
   color: rgba(255, 255, 255, 0.9);
 }
 
+.stats-card-subtitle {
+  font-family: montserratMedium;
+}
+
 .chart-container {
   background: rgba(20, 20, 30, 0.3);
   backdrop-filter: blur(8px);
@@ -157,7 +161,12 @@
   padding: 1.5rem;
   border-radius: 12px;
   height: 300px;
+
+  
+    font-family: montserratBold;
+  
 }
+
 
 .team-section {
   background: rgba(20, 20, 30, 0.3);
@@ -176,7 +185,8 @@
   margin-bottom: 1rem;
 }
 
-.team-title {
+.team-title,
+.team-title + span {
   font-size: 1.2rem;
 
   font-family: montserratSemiBold;
@@ -293,6 +303,7 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
+  font-family: montserratSemiBold;
 }
 
 .preview-image {

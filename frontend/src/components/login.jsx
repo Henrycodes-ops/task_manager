@@ -48,7 +48,7 @@ export default function Login() {
           size: "large",
           width: 300,
           text: "signin_with",
-          borderRadius: 7
+          borderRadius: 7,
         });
       }
     };
@@ -131,6 +131,16 @@ export default function Login() {
     }
   };
 
+  // Add GitHub authentication function
+  const handleGitHubLogin = () => {
+    // GitHub OAuth requires redirecting to GitHub first
+    const githubClientId = "Ov23liXr1PjkF9aUE4zq"; // You'll need to replace this
+    const redirectUri = encodeURIComponent(
+      `${window.location.origin}/github-callback`
+    );
+    window.location.href = `https://github.com/login/oauth/authorize?client_id=${githubClientId}&redirect_uri=${redirectUri}&scope=user:email`;
+  };
+
   return (
     <div className="login-container">
       <div className="spline-background">
@@ -180,6 +190,14 @@ export default function Login() {
         <div className="separator">or</div>
 
         <div ref={googleButtonRef} className="google-signin-container"></div>
+
+        <button
+          onClick={handleGitHubLogin}
+          className="github-signin-button"
+          disabled={loading}
+        >
+          Sign in with GitHub
+        </button>
 
         <p className="signup-link">
           Don&apos;t have an account? <Link to="/signup">Sign up</Link>

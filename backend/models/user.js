@@ -25,7 +25,7 @@ const userSchema = new Schema(
       sparse: true, // Allows null values but ensures uniqueness for non-null values
       unique: true,
     },
-    githubid: {
+    githubId: {
       type: String,
       unique: true,
       sparse: true

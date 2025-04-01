@@ -8,7 +8,9 @@ export default {
   auth: {
     login: `${API_URL}/auth/login`,
     signup: `${API_URL}/auth/signup`,
+
     google: `${API_URL}/auth/google`,
+    github: `${API_URL}/auth/github`
   },
   users: {
     profile: `${API_URL}/users/profile`,
