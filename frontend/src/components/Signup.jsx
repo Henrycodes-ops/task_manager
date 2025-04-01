@@ -3,7 +3,7 @@ import { SplineBlob } from "./spline";
 import { SplineLoadContext } from "./splineLoadProvider";
 import { useNavigate, Link } from "react-router-dom";
 import { login } from "../utils/auth";
-import {api } from "../config/api"
+import api from "../config/api"
 
 export default function Signup() {
   const { splineLoaded } = useContext(SplineLoadContext);
