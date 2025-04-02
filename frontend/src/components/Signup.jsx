@@ -44,7 +44,13 @@ export default function Signup() {
         const data = await result.json();
 
         if (data.success) {
-          login(data.token, data.user);
+          // Ensure the user object has the picture field
+          const userData = {
+            ...data.user,
+            picture: data.user.picture || data.user.photoURL || data.user.avatar || null
+          };
+          
+          login(data.token, userData);
           navigate("/home");
         } else {
           setError(data.message || "Authentication failed");

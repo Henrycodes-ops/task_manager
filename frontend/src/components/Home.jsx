@@ -17,7 +17,7 @@ export default function Home() {
     try {
       const data = await fetchWithAuth(api.users.profile);
       if (data.success) {
-        setUserProfile(data.user);
+        setUser(data.user);
       }
     } catch (error) {
       console.error("Error fetching profile:", error);
@@ -34,7 +34,11 @@ export default function Home() {
     }
 
     try {
-      setUser(JSON.parse(userData));
+      const parsedUser = JSON.parse(userData);
+      setUser(parsedUser);
+      
+      // Fetch fresh profile data
+      fetchProfile();
     } catch (error) {
       console.error("Error parsing user data:", error);
       localStorage.removeItem("user");
