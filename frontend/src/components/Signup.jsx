@@ -103,21 +103,27 @@ export default function Signup() {
   }, [handleGoogleResponse]);
 
   const handleGitHubLogin = () => {
-    const GITHUB_CLIENT_ID = "Ov23li0Zf2FMhySKZ9uP";
-    const REDIRECT_URI = "http://localhost:5173/signup";
-    const SCOPE = "user:email";
-    const githubOAuthUrl = `https://github.com/login/oauth/authorize?client_id=${GITHUB_CLIENT_ID}&redirect_uri=${REDIRECT_URI}&scope=${SCOPE}`;
+    // Generate a random state parameter for security
+    const state = Math.random().toString(36).substring(7);
+    localStorage.setItem('github_oauth_state', state);
+    
+    const githubOAuthUrl = `https://github.com/login/oauth/authorize?client_id=${api.auth.githubClientId}&redirect_uri=${window.location.origin}/signup&scope=user:email&state=${state}`;
     localStorage.setItem("preAuthPath", window.location.pathname);
     window.location.href = githubOAuthUrl;
   };
 
-  // New useEffect to handle GitHub OAuth callback
+  // Updated useEffect to handle GitHub OAuth callback
   useEffect(() => {
     const handleGitHubCallback = async () => {
       const urlParams = new URLSearchParams(window.location.search);
       const code = urlParams.get("code");
+      const state = urlParams.get("state");
+      const savedState = localStorage.getItem('github_oauth_state');
 
-      if (code) {
+      // Clear URL parameters
+      window.history.replaceState({}, document.title, window.location.pathname);
+
+      if (code && state && state === savedState) {
         setLoading(true);
         setError("");
 
@@ -127,20 +133,21 @@ export default function Signup() {
             headers: {
               "Content-Type": "application/json",
             },
-            body: JSON.stringify({ code }),
+            body: JSON.stringify({ code, state }),
             credentials: "include",
           });
+
+          if (!result.ok) {
+            throw new Error(`HTTP error! status: ${result.status}`);
+          }
 
           const data = await result.json();
 
           if (data.success) {
-            // Store the user session/token
             login(data.token, data.user);
-
-            // Retrieve and redirect to the pre-auth path or default to home
             const prePath = localStorage.getItem("preAuthPath") || "/home";
             localStorage.removeItem("preAuthPath");
-
+            localStorage.removeItem('github_oauth_state');
             navigate(prePath);
           } else {
             setError(data.message || "GitHub authentication failed");
@@ -151,6 +158,8 @@ export default function Signup() {
         } finally {
           setLoading(false);
         }
+      } else if (code && (!state || !savedState || state !== savedState)) {
+        setError("Invalid OAuth state. Please try again.");
       }
     };
 
