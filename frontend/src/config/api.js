@@ -23,4 +23,13 @@ export default {
   users: {
     profile: `${API_URL}/users/profile`,
   },
+  tasks: {
+    list: `${API_URL}/tasks`,
+    create: `${API_URL}/tasks`,
+    update: `${API_URL}/tasks`,
+    delete: `${API_URL}/tasks`,
+  },
+  ai: {
+    suggest: `${API_URL}/ai/suggest`,
+  },
 };

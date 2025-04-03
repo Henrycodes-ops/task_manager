@@ -7,6 +7,7 @@ import AIAssistant from './AIAssistant';
 import api from '../config/api';
 import { getUser } from '../utils/auth';
 import '../components/css/taskManager.css';
+import axios from 'axios';
 
 export default function TaskManager() {
   const [tasks, setTasks] = useState([]);
@@ -28,16 +29,14 @@ export default function TaskManager() {
   const fetchTasks = async () => {
     try {
       setLoading(true);
-      const response = await fetch(api.tasks.list, {
-        credentials: 'include',
-      });
-      const data = await response.json();
-      if (data.success) {
-        setTasks(data.tasks);
+      const response = await axios.get(api.tasks.list);
+      if (response.data.success) {
+        setTasks(response.data.data);
+      } else {
+        setError(response.data.error || 'Failed to fetch tasks');
       }
     } catch (error) {
-      console.error('Error fetching tasks:', error);
-      setError('Failed to load tasks');
+      setError(error.response?.data?.error || 'Error fetching tasks');
     } finally {
       setLoading(false);
     }
@@ -46,25 +45,49 @@ export default function TaskManager() {
   const handleTaskCreate = async (taskData) => {
     try {
       setLoading(true);
-      const response = await fetch(api.tasks.create, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          ...taskData,
-          githubRepo: selectedRepo,
-        }),
-        credentials: 'include',
-      });
-      const data = await response.json();
-      if (data.success) {
-        setTasks([...tasks, data.task]);
+      const response = await axios.post(api.tasks.create, taskData);
+      if (response.data.success) {
+        setTasks([response.data.data, ...tasks]);
         setSelectedRepo(null);
+      } else {
+        setError(response.data.error || 'Failed to create task');
       }
     } catch (error) {
-      console.error('Error creating task:', error);
-      setError('Failed to create task');
+      setError(error.response?.data?.error || 'Error creating task');
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleTaskUpdate = async (taskId, updates) => {
+    try {
+      setLoading(true);
+      const response = await axios.put(api.tasks.update, { taskId, ...updates });
+      if (response.data.success) {
+        setTasks(tasks.map(task => 
+          task._id === taskId ? response.data.data : task
+        ));
+      } else {
+        setError(response.data.error || 'Failed to update task');
+      }
+    } catch (error) {
+      setError(error.response?.data?.error || 'Error updating task');
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleTaskDelete = async (taskId) => {
+    try {
+      setLoading(true);
+      const response = await axios.delete(`${api.tasks.delete}/${taskId}`);
+      if (response.data.success) {
+        setTasks(tasks.filter(task => task._id !== taskId));
+      } else {
+        setError(response.data.error || 'Failed to delete task');
+      }
+    } catch (error) {
+      setError(error.response?.data?.error || 'Error deleting task');
     } finally {
       setLoading(false);
     }
@@ -104,7 +127,8 @@ export default function TaskManager() {
           <TaskList
             tasks={tasks}
             loading={loading}
-            onTaskUpdate={fetchTasks}
+            onTaskUpdate={handleTaskUpdate}
+            onTaskDelete={handleTaskDelete}
           />
         </div>
       </div>

@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { FiGithub, FiRefreshCw } from 'react-icons/fi';
 import api from '../config/api';
-import '../components/css/githubIntegration.css';
+// import '../components/css/githubIntegration.css';
 
 export default function GitHubIntegration({ onRepoSelect, selectedRepo }) {
   const [repos, setRepos] = useState([]);
