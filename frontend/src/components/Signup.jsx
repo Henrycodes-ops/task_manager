@@ -113,7 +113,7 @@ export default function Signup() {
     const state = Math.random().toString(36).substring(7);
     localStorage.setItem('github_oauth_state', state);
     
-    const githubOAuthUrl = `https://github.com/login/oauth/authorize?client_id=${api.auth.githubClientId}&redirect_uri=${window.location.origin}/signup&scope=user:email&state=${state}`;
+    const githubOAuthUrl = `https://github.com/login/oauth/authorize?client_id=${api.auth.githubClientId}&redirect_uri=${encodeURIComponent(api.auth.githubRedirectUri)}&scope=user:email&state=${state}`;
     localStorage.setItem("preAuthPath", window.location.pathname);
     window.location.href = githubOAuthUrl;
   };

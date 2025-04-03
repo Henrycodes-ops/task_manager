@@ -38,8 +38,7 @@ export default function Login() {
     const initializeGoogleSignIn = () => {
       if (window.google && googleButtonRef.current) {
         window.google.accounts.id.initialize({
-          client_id:
-            "1060221181168-tcqc0u99kb3kbnhjrburithdi5ga8cvo.apps.googleusercontent.com",
+          client_id: api.auth.googleClientId,
           callback: handleGoogleResponse,
         });
 
@@ -133,12 +132,13 @@ export default function Login() {
 
   // Add GitHub authentication function
   const handleGitHubLogin = () => {
-    // GitHub OAuth requires redirecting to GitHub first
-    const githubClientId = "Ov23liXr1PjkF9aUE4zq"; // You'll need to replace this
-    const redirectUri = encodeURIComponent(
-      `${window.location.origin}/github-callback`
-    );
-    window.location.href = `https://github.com/login/oauth/authorize?client_id=${githubClientId}&redirect_uri=${redirectUri}&scope=user:email`;
+    // Generate a random state parameter for security
+    const state = Math.random().toString(36).substring(7);
+    localStorage.setItem('github_oauth_state', state);
+    
+    const githubOAuthUrl = `https://github.com/login/oauth/authorize?client_id=${api.auth.githubClientId}&redirect_uri=${encodeURIComponent(api.auth.githubRedirectUri)}&scope=user:email&state=${state}`;
+    localStorage.setItem("preAuthPath", window.location.pathname);
+    window.location.href = githubOAuthUrl;
   };
 
   return (
