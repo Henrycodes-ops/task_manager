@@ -7,7 +7,7 @@ import Login from "./components/login";
 import Signup from "./components/signup";
 import Task from "./components/task";
 import GitHubCallback from "./components/githubCallback";
-
+import ForgotPassword from "./components/ForgotPassword";
 export default function TaskManager() {
   return (
     <Router>
@@ -29,6 +29,7 @@ export default function TaskManager() {
           <Route path="/" element={<h1>Not Found</h1>} />
           <Route path="/task" element={<Task />} />
           <Route path="/githubCallback" element={<GitHubCallback />} />
+          <Route path="/forgot-password" element={<ForgotPassword />} />
         </Routes>
       </SplineLoadProvider>
     </Router>

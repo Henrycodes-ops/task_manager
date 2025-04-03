@@ -17,7 +17,9 @@
   "dependencies": {
     "@splinetool/react-spline": "^4.0.0",
     "@splinetool/runtime": "^1.9.71",
-    "concurrently": "^9.1.2"
+    "bcryptjs": "^3.0.2",
+    "concurrently": "^9.1.2",
+    "nodemailer": "^6.10.0"
   },
   "devDependencies": {
     "nodemon": "^3.1.9"
