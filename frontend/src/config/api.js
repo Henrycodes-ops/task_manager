@@ -16,7 +16,9 @@ export default {
     github: `${API_URL}/auth/github`,
     githubClientId: GITHUB_CLIENT_ID,
     githubRedirectUri: "http://localhost:5173/signup",
-    googleClientId: GOOGLE_CLIENT_ID
+    googleClientId: GOOGLE_CLIENT_ID,
+    forgotPassword: `${API_URL}/auth/forgot-password`,
+    resetPassword: `${API_URL}/auth/reset-password`
   },
   users: {
     profile: `${API_URL}/users/profile`,
