@@ -4,6 +4,7 @@ import { SplineBlob } from "./spline";
 import { SplineLoadContext } from "./splineLoadProvider";
 import { useContext } from "react";
 import api from "../config/api";
+import "../components/css/forgotPassword.css";
 
 export default function ForgotPassword() {
   const { splineLoaded } = useContext(SplineLoadContext);
