@@ -1,11 +1,10 @@
-import { useContext, useState, useEffect, useRef } from "react";
+import { useContext, useState,  } from "react";
 import { SplineBlob } from "./spline";
 import { SplineLoadContext } from "./splineLoadProvider";
 import { useNavigate, Link } from "react-router-dom";
 import api from "../config/api";
 import { login } from "../utils/auth";
 import { GoogleLogin } from '@react-oauth/google';
-import '../components/css/login.css';
 
 export default function Login() {
   const { splineLoaded } = useContext(SplineLoadContext);
@@ -13,52 +12,13 @@ export default function Login() {
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
-  const googleButtonRef = useRef(null);
   const navigate = useNavigate();
-
-  useEffect(() => {
-    // Load the Google Sign-In SDK
-    const loadGoogleScript = () => {
-      // Check if the script is already loaded
-      if (
-        document.querySelector(
-          'script[src="https://accounts.google.com/gsi/client"]'
-        )
-      ) {
-        initializeGoogleSignIn();
-        return;
-      }
-
-      const script = document.createElement("script");
-      script.src = "https://accounts.google.com/gsi/client";
-      script.async = true;
-      script.defer = true;
-      document.body.appendChild(script);
-      script.onload = initializeGoogleSignIn;
-    };
-
-    const initializeGoogleSignIn = () => {
-      if (window.google && googleButtonRef.current) {
-        window.google.accounts.id.initialize({
-          client_id: api.auth.googleClientId,
-          callback: handleGoogleResponse,
-        });
-
-        window.google.accounts.id.renderButton(googleButtonRef.current, {
-          theme: "outline",
-          size: "large",
-          width: 300,
-          text: "signin_with",
-          borderRadius: 7,
-        });
-      }
-    };
-
-    loadGoogleScript();
-  }, []);
 
   const handleGoogleResponse = async (response) => {
     try {
+      setLoading(true);
+      setError("");
+      
       const res = await fetch(api.auth.google, {
         method: 'POST',
         headers: {
@@ -74,14 +34,16 @@ export default function Login() {
 
       const data = await res.json();
       if (data.success) {
-        localStorage.setItem('token', data.token);
-        navigate('/dashboard');
+        login(data.token, data.user);
+        navigate('/home');
       } else {
         setError(data.error || 'Authentication failed');
       }
     } catch (err) {
       console.error('Authentication error:', err);
       setError('Failed to authenticate with Google');
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -89,13 +51,6 @@ export default function Login() {
     e.preventDefault();
     setLoading(true);
     setError("");
-
-    // Basic validation
-    if (!email || !password) {
-      setError("Email and password are required");
-      setLoading(false);
-      return;
-    }
 
     try {
       const result = await fetch(api.auth.login, {
@@ -110,11 +65,8 @@ export default function Login() {
       const data = await result.json();
 
       if (data.success) {
-        // Store the user session/token
         login(data.token, data.user);
-
-        // Navigate to home
-        navigate("/home");
+        navigate("/dashboard");
       } else {
         setError(data.message || "Invalid email or password");
       }
@@ -126,9 +78,7 @@ export default function Login() {
     }
   };
 
-  // Add GitHub authentication function
   const handleGitHubLogin = () => {
-    // Generate a random state parameter for security
     const state = Math.random().toString(36).substring(7);
     localStorage.setItem('github_oauth_state', state);
     
@@ -143,9 +93,7 @@ export default function Login() {
         <SplineBlob />
       </div>
 
-      <div
-        className={`login-form ${splineLoaded ? "with-background" : "loading"}`}
-      >
+      <div className={`login-form ${splineLoaded ? "with-background" : "loading"}`}>
         <h2>Login</h2>
 
         {error && <div className="error-message">{error}</div>}
@@ -190,6 +138,11 @@ export default function Login() {
             onSuccess={handleGoogleResponse}
             onError={() => setError('Google login failed')}
             useOneTap
+            theme="outline"
+            size="large"
+            width="300"
+            text="signin_with"
+            shape="rectangular"
           />
         </div>
 

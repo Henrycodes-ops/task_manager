@@ -112,13 +112,33 @@ exports.verifyGoogleToken = async (req, res) => {
   try {
     const { credential } = req.body;
     
+    if (!credential) {
+      return res.status(400).json({ 
+        success: false, 
+        error: 'No credential provided' 
+      });
+    }
+
     const ticket = await client.verifyIdToken({
       idToken: credential,
       audience: process.env.GOOGLE_CLIENT_ID,
     });
 
     const payload = ticket.getPayload();
-    let user = await User.findOne({ googleId: payload.sub });
+    
+    if (!payload.email_verified) {
+      return res.status(400).json({ 
+        success: false, 
+        error: 'Email not verified with Google' 
+      });
+    }
+
+    let user = await User.findOne({ 
+      $or: [
+        { googleId: payload.sub },
+        { email: payload.email }
+      ]
+    });
 
     if (!user) {
       user = new User({
@@ -129,13 +149,32 @@ exports.verifyGoogleToken = async (req, res) => {
         isVerified: true,
       });
       await user.save();
+    } else if (!user.googleId) {
+      // If user exists but doesn't have Google ID, update it
+      user.googleId = payload.sub;
+      user.avatar = payload.picture;
+      await user.save();
     }
 
     const token = generateToken(user);
-    res.json({ success: true, token, user });
+    res.json({ 
+      success: true, 
+      token, 
+      user: {
+        id: user._id,
+        name: user.name,
+        email: user.email,
+        avatar: user.avatar,
+        isVerified: user.isVerified
+      }
+    });
   } catch (error) {
     console.error('Google token verification error:', error);
-    res.status(500).json({ success: false, error: 'Authentication failed' });
+    res.status(500).json({ 
+      success: false, 
+      error: 'Authentication failed',
+      message: error.message 
+    });
   }
 };
 
