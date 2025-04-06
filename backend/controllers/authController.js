@@ -1,16 +1,20 @@
+const jwt = require('jsonwebtoken');
 const User = require('../models/user');
+const { OAuth2Client } = require('google-auth-library');
 const crypto = require('crypto');
 const nodemailer = require('nodemailer');
 const passport = require('passport');
 const { generateToken } = require('../utils/auth');
+
+const client = new OAuth2Client(process.env.GOOGLE_CLIENT_ID);
 
 // Create a transporter for sending emails
 const transporter = nodemailer.createTransport({
   service: 'gmail',
   auth: {
     user: process.env.EMAIL_USER,
-    pass: process.env.EMAIL_PASSWORD
-  }
+    pass: process.env.EMAIL_PASSWORD,
+  },
 });
 
 exports.forgotPassword = async (req, res) => {
@@ -100,6 +104,38 @@ exports.resetPassword = async (req, res) => {
       success: false, 
       message: 'Error resetting password' 
     });
+  }
+};
+
+// Google OAuth token verification
+exports.verifyGoogleToken = async (req, res) => {
+  try {
+    const { credential } = req.body;
+    
+    const ticket = await client.verifyIdToken({
+      idToken: credential,
+      audience: process.env.GOOGLE_CLIENT_ID,
+    });
+
+    const payload = ticket.getPayload();
+    let user = await User.findOne({ googleId: payload.sub });
+
+    if (!user) {
+      user = new User({
+        googleId: payload.sub,
+        email: payload.email,
+        name: payload.name,
+        avatar: payload.picture,
+        isVerified: true,
+      });
+      await user.save();
+    }
+
+    const token = generateToken(user);
+    res.json({ success: true, token, user });
+  } catch (error) {
+    console.error('Google token verification error:', error);
+    res.status(500).json({ success: false, error: 'Authentication failed' });
   }
 };
 

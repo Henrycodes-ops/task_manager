@@ -4,6 +4,8 @@ import { SplineLoadContext } from "./splineLoadProvider";
 import { useNavigate, Link } from "react-router-dom";
 import api from "../config/api";
 import { login } from "../utils/auth";
+import { GoogleLogin } from '@react-oauth/google';
+import '../components/css/login.css';
 
 export default function Login() {
   const { splineLoaded } = useContext(SplineLoadContext);
@@ -56,36 +58,30 @@ export default function Login() {
   }, []);
 
   const handleGoogleResponse = async (response) => {
-    setLoading(true);
-    setError("");
-
     try {
-      // Make sure this endpoint matches your backend route
-      const result = await fetch(api.auth.google, {
-        method: "POST",
+      const res = await fetch(api.auth.google, {
+        method: 'POST',
         headers: {
-          "Content-Type": "application/json",
+          'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ token: response.credential }),
-        credentials: "include",
+        body: JSON.stringify({ credential: response.credential }),
+        credentials: 'include',
       });
 
-      const data = await result.json();
-
-      if (data.success) {
-        // Store the user session/token
-        login(data.token, data.user);
-
-        // Navigate to home
-        navigate("/home");
-      } else {
-        setError(data.message || "Authentication failed");
+      if (!res.ok) {
+        throw new Error('Authentication failed');
       }
-    } catch (error) {
-      console.error("Authentication error:", error);
-      setError("Server error. Please try again later.");
-    } finally {
-      setLoading(false);
+
+      const data = await res.json();
+      if (data.success) {
+        localStorage.setItem('token', data.token);
+        navigate('/dashboard');
+      } else {
+        setError(data.error || 'Authentication failed');
+      }
+    } catch (err) {
+      console.error('Authentication error:', err);
+      setError('Failed to authenticate with Google');
     }
   };
 
@@ -189,7 +185,13 @@ export default function Login() {
 
         <div className="separator">or</div>
 
-        <div ref={googleButtonRef} className="google-signin-container"></div>
+        <div className="google-login">
+          <GoogleLogin
+            onSuccess={handleGoogleResponse}
+            onError={() => setError('Google login failed')}
+            useOneTap
+          />
+        </div>
 
         <button
           onClick={handleGitHubLogin}

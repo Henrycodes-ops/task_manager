@@ -21,8 +21,9 @@ const JWT_SECRET = process.env.JWT_SECRET || "your-secure-jwt-secret"; // Fixed 
 const GITHUB_CLIENT_ID = process.env.GITHUB_CLIENT_ID;
 const GITHUB_CLIENT_SECRET = process.env.GITHUB_CLIENT_SECRET;
 
-// Google OAuth authentication
-router.post("/google", authController.googleLogin);
+// Google OAuth routes
+router.post('/google', authController.verifyGoogleToken);
+router.get('/google/callback', authController.googleCallback);
 
 // GitHub OAuth authentication
 router.post("/github", authController.githubLogin);
@@ -36,6 +37,11 @@ router.post("/login", authController.login);
 // New password reset routes
 router.post('/forgot-password', authController.forgotPassword);
 router.post('/reset-password', authController.resetPassword);
+
+// Other auth routes
+router.post('/logout', authController.logout);
+router.get('/verify-email/:token', authController.verifyEmail);
+router.post('/resend-verification', authController.resendVerification);
 
 // Helper function to find or create GitHub user
 async function findOrCreateGitHubUser(userData) {
