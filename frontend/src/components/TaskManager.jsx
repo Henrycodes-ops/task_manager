@@ -13,23 +13,26 @@ export default function TaskManager() {
   const [tasks, setTasks] = useState([]);
   const [selectedRepo, setSelectedRepo] = useState(null);
   const [loading, setLoading] = useState(false);
-  const [error, setError] = useState('');
-  const [aiSuggestions, setAiSuggestions] = useState([]);
+  const [error, setError] = useState(null);
+  const [suggestions, setSuggestions] = useState([]);
   const navigate = useNavigate();
-  const user = getUser();
 
   useEffect(() => {
+    const user = getUser();
     if (!user) {
       navigate('/login');
       return;
     }
     fetchTasks();
-  }, [user, navigate]);
+  }, [navigate]);
 
   const fetchTasks = async () => {
     try {
       setLoading(true);
-      const response = await axios.get(api.tasks.list);
+      setError(null);
+      const response = await axios.get(api.tasks.list, {
+        withCredentials: true
+      });
       if (response.data.success) {
         setTasks(response.data.data);
       } else {
@@ -45,7 +48,13 @@ export default function TaskManager() {
   const handleTaskCreate = async (taskData) => {
     try {
       setLoading(true);
-      const response = await axios.post(api.tasks.create, taskData);
+      setError(null);
+      const response = await axios.post(api.tasks.create, {
+        ...taskData,
+        githubRepo: selectedRepo
+      }, {
+        withCredentials: true
+      });
       if (response.data.success) {
         setTasks([response.data.data, ...tasks]);
         setSelectedRepo(null);
@@ -62,7 +71,10 @@ export default function TaskManager() {
   const handleTaskUpdate = async (taskId, updates) => {
     try {
       setLoading(true);
-      const response = await axios.put(api.tasks.update, { taskId, ...updates });
+      setError(null);
+      const response = await axios.put(api.tasks.update, { taskId, ...updates }, {
+        withCredentials: true
+      });
       if (response.data.success) {
         setTasks(tasks.map(task => 
           task._id === taskId ? response.data.data : task
@@ -80,7 +92,10 @@ export default function TaskManager() {
   const handleTaskDelete = async (taskId) => {
     try {
       setLoading(true);
-      const response = await axios.delete(`${api.tasks.delete}/${taskId}`);
+      setError(null);
+      const response = await axios.delete(`${api.tasks.delete}/${taskId}`, {
+        withCredentials: true
+      });
       if (response.data.success) {
         setTasks(tasks.filter(task => task._id !== taskId));
       } else {
@@ -94,19 +109,14 @@ export default function TaskManager() {
   };
 
   const handleAISuggestion = (suggestion) => {
-    setAiSuggestions([...aiSuggestions, suggestion]);
+    setSuggestions([...suggestions, suggestion]);
   };
 
   return (
-    <div className="task-manager-container">
+    <div className="task-manager">
       <div className="task-manager-header">
         <h1>Task Manager</h1>
-        {user.githubId && (
-          <GitHubIntegration
-            onRepoSelect={setSelectedRepo}
-            selectedRepo={selectedRepo}
-          />
-        )}
+        {error && <div className="error-message">{error}</div>}
       </div>
 
       <div className="task-manager-content">
@@ -116,14 +126,17 @@ export default function TaskManager() {
             selectedRepo={selectedRepo}
             loading={loading}
           />
-          <AIAssistant
-            onSuggestion={handleAISuggestion}
-            suggestions={aiSuggestions}
+          <GitHubIntegration
+            onRepoSelect={setSelectedRepo}
+            selectedRepo={selectedRepo}
           />
         </div>
 
         <div className="task-list-section">
-          {error && <div className="error-message">{error}</div>}
+          <AIAssistant
+            onSuggestion={handleAISuggestion}
+            suggestions={suggestions}
+          />
           <TaskList
             tasks={tasks}
             loading={loading}
