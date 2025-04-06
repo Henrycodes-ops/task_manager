@@ -1,6 +1,8 @@
 const User = require('../models/user');
 const crypto = require('crypto');
 const nodemailer = require('nodemailer');
+const passport = require('passport');
+const { generateToken } = require('../utils/auth');
 
 // Create a transporter for sending emails
 const transporter = nodemailer.createTransport({
@@ -99,4 +101,18 @@ exports.resetPassword = async (req, res) => {
       message: 'Error resetting password' 
     });
   }
-}; 
+};
+
+// Google OAuth callback
+exports.googleCallback = (req, res) => {
+  passport.authenticate('google', { failureRedirect: '/login' })(req, res, () => {
+    const token = generateToken(req.user);
+    res.redirect(`http://localhost:5173/auth/callback?token=${token}`);
+  });
+};
+
+// Google OAuth login
+exports.googleLogin = passport.authenticate('google', {
+  scope: ['profile', 'email'],
+  prompt: 'select_account'
+}); 

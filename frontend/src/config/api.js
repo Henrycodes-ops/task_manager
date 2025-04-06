@@ -1,5 +1,5 @@
 // frontend/src/config/api.js
-const API_URL = 'http://localhost:5000/api';
+const API_URL = 'http://localhost:3001/api';
 
 const GITHUB_CLIENT_ID = "Ov23li0Zf2FMhySKZ9uP";
 const GOOGLE_CLIENT_ID = "1060221181168-tcqc0u99kb3kbnhjrburithdi5ga8cvo.apps.googleusercontent.com";
