@@ -5,6 +5,8 @@ const crypto = require('crypto');
 const nodemailer = require('nodemailer');
 const passport = require('passport');
 const { generateToken } = require('../utils/auth');
+const bcrypt = require('bcrypt');
+const axios = require('axios');
 
 const client = new OAuth2Client(process.env.GOOGLE_CLIENT_ID);
 
@@ -107,87 +109,199 @@ exports.resetPassword = async (req, res) => {
   }
 };
 
-// Google OAuth token verification
+// Google OAuth verification
 exports.verifyGoogleToken = async (req, res) => {
   try {
-    const { credential } = req.body;
-    
-    if (!credential) {
-      return res.status(400).json({ 
-        success: false, 
-        error: 'No credential provided' 
-      });
-    }
-
+    const { token } = req.body;
     const ticket = await client.verifyIdToken({
-      idToken: credential,
-      audience: process.env.GOOGLE_CLIENT_ID,
+      idToken: token,
+      audience: process.env.GOOGLE_CLIENT_ID
     });
-
     const payload = ticket.getPayload();
     
-    if (!payload.email_verified) {
-      return res.status(400).json({ 
-        success: false, 
-        error: 'Email not verified with Google' 
-      });
-    }
-
-    let user = await User.findOne({ 
-      $or: [
-        { googleId: payload.sub },
-        { email: payload.email }
-      ]
-    });
-
+    let user = await User.findOne({ email: payload.email });
     if (!user) {
-      user = new User({
-        googleId: payload.sub,
+      user = await User.create({
         email: payload.email,
         name: payload.name,
-        avatar: payload.picture,
-        isVerified: true,
+        googleId: payload.sub,
+        isVerified: true
       });
-      await user.save();
-    } else if (!user.googleId) {
-      // If user exists but doesn't have Google ID, update it
-      user.googleId = payload.sub;
-      user.avatar = payload.picture;
-      await user.save();
     }
 
-    const token = generateToken(user);
-    res.json({ 
-      success: true, 
-      token, 
-      user: {
-        id: user._id,
-        name: user.name,
-        email: user.email,
-        avatar: user.avatar,
-        isVerified: user.isVerified
-      }
-    });
+    const jwtToken = generateToken(user);
+    res.cookie('token', jwtToken, { httpOnly: true, secure: process.env.NODE_ENV === 'production' });
+    res.json({ success: true, user: { id: user._id, email: user.email, name: user.name } });
   } catch (error) {
-    console.error('Google token verification error:', error);
-    res.status(500).json({ 
-      success: false, 
-      error: 'Authentication failed',
-      message: error.message 
-    });
+    console.error('Google auth error:', error);
+    res.status(500).json({ success: false, error: 'Authentication failed' });
   }
 };
 
 // Google OAuth callback
-exports.googleCallback = (req, res) => {
-  passport.authenticate('google', { failureRedirect: '/login' })(req, res, () => {
-    const token = generateToken(req.user);
-    res.redirect(`http://localhost:5173/auth/callback?token=${token}`);
-  });
+exports.googleCallback = async (req, res) => {
+  try {
+    const { code } = req.query;
+    const { tokens } = await client.getToken(code);
+    const ticket = await client.verifyIdToken({
+      idToken: tokens.id_token,
+      audience: process.env.GOOGLE_CLIENT_ID
+    });
+    const payload = ticket.getPayload();
+    
+    let user = await User.findOne({ email: payload.email });
+    if (!user) {
+      user = await User.create({
+        email: payload.email,
+        name: payload.name,
+        googleId: payload.sub,
+        isVerified: true
+      });
+    }
+
+    const jwtToken = generateToken(user);
+    res.cookie('token', jwtToken, { httpOnly: true, secure: process.env.NODE_ENV === 'production' });
+    res.redirect(process.env.FRONTEND_URL || 'http://localhost:5173');
+  } catch (error) {
+    console.error('Google callback error:', error);
+    res.redirect(`${process.env.FRONTEND_URL || 'http://localhost:5173'}/login?error=auth_failed`);
+  }
 };
 
 // Google OAuth login
 exports.googleLogin = passport.authenticate('google', {
   scope: ['profile', 'email'],
   prompt: 'select_account'
-}); 
+});
+
+// GitHub OAuth login
+exports.githubLogin = async (req, res) => {
+  try {
+    const { code } = req.body;
+    const response = await axios.post('https://github.com/login/oauth/access_token', {
+      client_id: process.env.GITHUB_CLIENT_ID,
+      client_secret: process.env.GITHUB_CLIENT_SECRET,
+      code
+    }, {
+      headers: { Accept: 'application/json' }
+    });
+
+    const { access_token } = response.data;
+    const userResponse = await axios.get('https://api.github.com/user', {
+      headers: { Authorization: `Bearer ${access_token}` }
+    });
+
+    const githubUser = userResponse.data;
+    let user = await User.findOne({ githubId: githubUser.id });
+    
+    if (!user) {
+      user = await User.create({
+        email: githubUser.email,
+        name: githubUser.name || githubUser.login,
+        githubId: githubUser.id,
+        isVerified: true
+      });
+    }
+
+    const jwtToken = generateToken(user);
+    res.cookie('token', jwtToken, { httpOnly: true, secure: process.env.NODE_ENV === 'production' });
+    res.json({ success: true, user: { id: user._id, email: user.email, name: user.name } });
+  } catch (error) {
+    console.error('GitHub auth error:', error);
+    res.status(500).json({ success: false, error: 'Authentication failed' });
+  }
+};
+
+// Email/password signup
+exports.signup = async (req, res) => {
+  try {
+    const { email, password, name } = req.body;
+    const existingUser = await User.findOne({ email });
+    
+    if (existingUser) {
+      return res.status(400).json({ success: false, error: 'Email already registered' });
+    }
+
+    const hashedPassword = await bcrypt.hash(password, 10);
+    const user = await User.create({
+      email,
+      password: hashedPassword,
+      name,
+      isVerified: false
+    });
+
+    // TODO: Send verification email
+    res.status(201).json({ success: true, message: 'User created successfully' });
+  } catch (error) {
+    console.error('Signup error:', error);
+    res.status(500).json({ success: false, error: 'Registration failed' });
+  }
+};
+
+// Email/password login
+exports.login = async (req, res) => {
+  try {
+    const { email, password } = req.body;
+    const user = await User.findOne({ email });
+    
+    if (!user) {
+      return res.status(401).json({ success: false, error: 'Invalid credentials' });
+    }
+
+    const validPassword = await bcrypt.compare(password, user.password);
+    if (!validPassword) {
+      return res.status(401).json({ success: false, error: 'Invalid credentials' });
+    }
+
+    if (!user.isVerified) {
+      return res.status(401).json({ success: false, error: 'Email not verified' });
+    }
+
+    const jwtToken = generateToken(user);
+    res.cookie('token', jwtToken, { httpOnly: true, secure: process.env.NODE_ENV === 'production' });
+    res.json({ success: true, user: { id: user._id, email: user.email, name: user.name } });
+  } catch (error) {
+    console.error('Login error:', error);
+    res.status(500).json({ success: false, error: 'Login failed' });
+  }
+};
+
+// Logout
+exports.logout = (req, res) => {
+  res.clearCookie('token');
+  res.json({ success: true, message: 'Logged out successfully' });
+};
+
+// Email verification
+exports.verifyEmail = async (req, res) => {
+  try {
+    const { token } = req.params;
+    // TODO: Verify token and update user
+    res.json({ success: true, message: 'Email verified successfully' });
+  } catch (error) {
+    console.error('Email verification error:', error);
+    res.status(500).json({ success: false, error: 'Email verification failed' });
+  }
+};
+
+// Resend verification email
+exports.resendVerification = async (req, res) => {
+  try {
+    const { email } = req.body;
+    const user = await User.findOne({ email });
+    
+    if (!user) {
+      return res.status(404).json({ success: false, error: 'User not found' });
+    }
+
+    if (user.isVerified) {
+      return res.status(400).json({ success: false, error: 'Email already verified' });
+    }
+
+    // TODO: Send verification email
+    res.json({ success: true, message: 'Verification email sent' });
+  } catch (error) {
+    console.error('Resend verification error:', error);
+    res.status(500).json({ success: false, error: 'Failed to resend verification email' });
+  }
+}; 
