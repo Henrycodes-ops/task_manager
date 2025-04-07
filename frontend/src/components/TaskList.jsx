@@ -1,7 +1,6 @@
 import { useState } from 'react';
 import { FiCheck, FiEdit2, FiTrash2, FiGitBranch } from 'react-icons/fi';
 import api from '../config/api';
-import '../components/css/taskList.css';
 
 export default function TaskList({ tasks, loading, onTaskUpdate }) {
   const [editingTask, setEditingTask] = useState(null);
