@@ -3,19 +3,19 @@ const router = express.Router();
 const authMiddleware = require('../middleware/auth');
 const taskController = require('../controllers/taskController');
 
-// Apply auth middleware to all task routes
+// Apply auth middleware to all routes
 router.use(authMiddleware);
 
-// Get all tasks for the authenticated user
+// Get all tasks
 router.get('/', taskController.getTasks);
 
 // Create a new task
 router.post('/', taskController.createTask);
 
 // Update a task
-router.put('/', taskController.updateTask);
+router.put('/:id', taskController.updateTask);
 
 // Delete a task
-router.delete('/:taskId', taskController.deleteTask);
+router.delete('/:id', taskController.deleteTask);
 
 module.exports = router; 

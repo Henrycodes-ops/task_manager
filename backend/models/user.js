@@ -19,7 +19,9 @@ const userSchema = new Schema(
     },
     password: {
       type: String,
-      required: true,
+      required: function() {
+        return !this.googleId && !this.githubId;
+      }
     },
     googleId: {
       type: String,
@@ -30,6 +32,14 @@ const userSchema = new Schema(
       type: String,
       unique: true,
       sparse: true
+    },
+    githubAccessToken: {
+      type: String,
+      sparse: true
+    },
+    isVerified: {
+      type: Boolean,
+      default: false
     },
     picture: {
       type: String,
@@ -46,15 +56,10 @@ const userSchema = new Schema(
 
 // Hash password before saving
 userSchema.pre('save', async function(next) {
-  if (!this.isModified('password')) return next();
-  
-  try {
-    const salt = await bcrypt.genSalt(10);
-    this.password = await bcrypt.hash(this.password, salt);
-    next();
-  } catch (error) {
-    next(error);
+  if (this.isModified('password')) {
+    this.password = await bcrypt.hash(this.password, 10);
   }
+  next();
 });
 
 // Method to compare password

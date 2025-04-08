@@ -1,46 +1,49 @@
 const mongoose = require('mongoose');
 
 const taskSchema = new mongoose.Schema({
-  userId: {
-    type: mongoose.Schema.Types.ObjectId,
-    ref: 'User',
-    required: true,
-  },
   title: {
     type: String,
     required: true,
-    trim: true,
+    trim: true
   },
   description: {
     type: String,
-    trim: true,
+    trim: true
+  },
+  dueDate: {
+    type: Date
   },
   priority: {
     type: String,
     enum: ['low', 'medium', 'high'],
-    default: 'medium',
-  },
-  dueDate: {
-    type: Date,
+    default: 'medium'
   },
   status: {
     type: String,
     enum: ['pending', 'in-progress', 'completed'],
-    default: 'pending',
+    default: 'pending'
   },
   githubRepo: {
-    name: String,
-    branch: String,
-    url: String,
+    type: String,
+    trim: true
+  },
+  githubBranch: {
+    type: String,
+    trim: true
+  },
+  userId: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'User',
+    required: true
   },
   createdAt: {
     type: Date,
-    default: Date.now,
+    default: Date.now
   },
   updatedAt: {
     type: Date,
-    default: Date.now,
-  },
+    default: Date.now
+  }
 });
 
 // Update the updatedAt field before saving

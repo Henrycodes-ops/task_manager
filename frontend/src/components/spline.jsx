@@ -1,4 +1,4 @@
-import { useState, useContext } from "react";
+import { useState, useContext, useEffect } from "react";
 import Spline from "@splinetool/react-spline";
 import { SplineLoadContext } from "./splineLoadProvider";
 import ErrorBoundary from "./ErrorBoundary";
@@ -11,68 +11,106 @@ const LoadingSpinner = () => (
   </div>
 );
 
-export default function SplineContainer() {
+const SplineWrapper = ({ sceneUrl, className }) => {
   const [loaded, setLoaded] = useState(false);
+  const [error, setError] = useState(null);
   const { setSplineLoaded } = useContext(SplineLoadContext);
+
+  useEffect(() => {
+    // Reset state when component mounts
+    setLoaded(false);
+    setError(null);
+  }, [sceneUrl]);
 
   const handleSplineLoad = () => {
     setLoaded(true);
     setSplineLoaded(true);
   };
 
+  const handleSplineError = (error) => {
+    console.error("Spline error:", error);
+    setError("Failed to load 3D scene");
+    setSplineLoaded(false);
+  };
+
+  // Handle WebGL context loss
+  useEffect(() => {
+    const handleContextLost = (event) => {
+      event.preventDefault();
+      setError("WebGL context lost. Please refresh the page.");
+    };
+
+    const handleContextRestored = () => {
+      setError(null);
+      setLoaded(false);
+    };
+
+    const canvas = document.querySelector('canvas');
+    if (canvas) {
+      canvas.addEventListener('webglcontextlost', handleContextLost);
+      canvas.addEventListener('webglcontextrestored', handleContextRestored);
+    }
+
+    return () => {
+      if (canvas) {
+        canvas.removeEventListener('webglcontextlost', handleContextLost);
+        canvas.removeEventListener('webglcontextrestored', handleContextRestored);
+      }
+    };
+  }, []);
+
+  if (error) {
+    return (
+      <div className={className}>
+        <div className="error-message">
+          <p>{error}</p>
+          <button onClick={() => window.location.reload()}>Retry</button>
+        </div>
+      </div>
+    );
+  }
+
+  return (
+    <div className={className}>
+      {!loaded && <LoadingSpinner />}
+      <Spline
+        scene={sceneUrl}
+        onLoad={handleSplineLoad}
+        onError={handleSplineError}
+      />
+    </div>
+  );
+};
+
+export default function SplineContainer() {
   return (
     <ErrorBoundary>
-      <div className="splineContainer">
-        {!loaded && <LoadingSpinner />}
-        <Spline
-          scene="https://prod.spline.design/Yja0XAhwPaIh2nCb/scene.splinecode"
-          onLoad={handleSplineLoad}
-        />
-      </div>
+      <SplineWrapper
+        sceneUrl="https://prod.spline.design/Yja0XAhwPaIh2nCb/scene.splinecode"
+        className="splineContainer"
+      />
     </ErrorBoundary>
   );
 }
 
 export function SplineBlob() {
-  const [loaded, setLoaded] = useState(false);
-  const { setSplineLoaded } = useContext(SplineLoadContext);
-
-  const handleSplineLoad = () => {
-    setLoaded(true);
-    setSplineLoaded(true);
-  };
-
   return (
     <ErrorBoundary>
-      <div className="splineBlob">
-        {!loaded && <LoadingSpinner />}
-        <Spline
-          scene="https://prod.spline.design/KT77YMuJyvvFZfgQ/scene.splinecode"
-          onLoad={handleSplineLoad}
-        />
-      </div>
+      <SplineWrapper
+        sceneUrl="https://prod.spline.design/KT77YMuJyvvFZfgQ/scene.splinecode"
+        className="splineBlob"
+      />
     </ErrorBoundary>
   );
 }
 
 export function HomeBackground() {
-  const [loaded, setLoaded] = useState(false);
-  const { setSplineLoaded } = useContext(SplineLoadContext);
-
-  const handleSplineLoad = () => {
-    setLoaded(true);
-    setSplineLoaded(true);
-  };
-
   return (
     <ErrorBoundary>
-      <div className="homeBackground">
-        {!loaded && <LoadingSpinner />}
-        <Spline
-          scene="https://prod.spline.design/qNCG-6RvWhNaVArS/scene.splinecode"
-          onLoad={handleSplineLoad}
-        />
-      </div>
+      <SplineWrapper
+        sceneUrl="https://prod.spline.design/qNCG-6RvWhNaVArS/scene.splinecode"
+        className="homeBackground"
+      />
     </ErrorBoundary>
   );
 }

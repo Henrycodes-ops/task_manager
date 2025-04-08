@@ -24,12 +24,13 @@ export default function Login() {
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ credential: response.credential }),
+        body: JSON.stringify({ token: response.credential }),
         credentials: 'include',
       });
 
       if (!res.ok) {
-        throw new Error('Authentication failed');
+        const errorData = await res.json();
+        throw new Error(errorData.error || 'Authentication failed');
       }
 
       const data = await res.json();
@@ -41,7 +42,7 @@ export default function Login() {
       }
     } catch (err) {
       console.error('Authentication error:', err);
-      setError('Failed to authenticate with Google');
+      setError(err.message || 'Failed to authenticate with Google');
     } finally {
       setLoading(false);
     }
