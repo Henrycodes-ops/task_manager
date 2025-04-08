@@ -1,26 +1,35 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useContext } from 'react';
 import { FiGithub, FiRefreshCw } from 'react-icons/fi';
 import api from '../config/api';
+import { fetchWithAuth } from '../utils/api';
+import { useNavigate } from 'react-router-dom';
 // import '../components/css/githubIntegration.css';
 
 export default function GitHubIntegration({ onRepoSelect, selectedRepo }) {
   const [repos, setRepos] = useState([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
+  const [isGitHubAuthenticated, setIsGitHubAuthenticated] = useState(false);
+  const navigate = useNavigate();
+
+  const checkGitHubAuth = async () => {
+    try {
+      const userData = localStorage.getItem('user');
+      if (userData) {
+        const user = JSON.parse(userData);
+        setIsGitHubAuthenticated(!!user.githubId);
+      }
+    } catch (error) {
+      console.error('Error checking GitHub auth:', error);
+    }
+  };
 
   const fetchRepos = async () => {
     try {
       setLoading(true);
       setError('');
-      const response = await fetch(api.github.repos, {
-        credentials: 'include',
-      });
-      const data = await response.json();
-      if (data.success) {
-        setRepos(data.repos);
-      } else {
-        setError(data.message || 'Failed to fetch repositories');
-      }
+      const data = await fetchWithAuth(api.github.repos);
+      setRepos(data);
     } catch (error) {
       console.error('Error fetching repositories:', error);
       setError('Failed to load repositories');
@@ -29,9 +38,41 @@ export default function GitHubIntegration({ onRepoSelect, selectedRepo }) {
     }
   };
 
+  const handleGitHubLogin = () => {
+    const state = Math.random().toString(36).substring(7);
+    localStorage.setItem('github_oauth_state', state);
+    localStorage.setItem('github_redirect_path', window.location.pathname);
+    
+    const githubOAuthUrl = `https://github.com/login/oauth/authorize?client_id=${api.auth.githubClientId}&redirect_uri=${encodeURIComponent(api.auth.githubRedirectUri)}&scope=user:email,repo&state=${state}`;
+    window.location.href = githubOAuthUrl;
+  };
+
   useEffect(() => {
-    fetchRepos();
-  }, []);
+    checkGitHubAuth();
+    if (isGitHubAuthenticated) {
+      fetchRepos();
+    }
+  }, [isGitHubAuthenticated]);
+
+  if (!isGitHubAuthenticated) {
+    return (
+      <div className="github-integration-container">
+        <div className="github-header">
+          <FiGithub className="github-icon" />
+          <h3>GitHub Integration</h3>
+        </div>
+        <div className="github-auth-message">
+          <p>Connect your GitHub account to access repositories</p>
+          <button
+            className="github-auth-button"
+            onClick={handleGitHubLogin}
+          >
+            Connect with GitHub
+          </button>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="github-integration-container">

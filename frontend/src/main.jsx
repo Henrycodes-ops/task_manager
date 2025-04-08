@@ -1,7 +1,6 @@
 import React from 'react'
 import ReactDOM from 'react-dom/client'
 import { GoogleOAuthProvider } from '@react-oauth/google'
-import { BrowserRouter } from 'react-router-dom'
 import { SplineLoadProvider } from './components/splineLoadProvider'
 import App from './App'
 import './index.css'
@@ -11,11 +10,9 @@ const clientId = import.meta.env.VITE_GOOGLE_CLIENT_ID || "1060221181168-tcqc0u9
 ReactDOM.createRoot(document.getElementById('root')).render(
   <React.StrictMode>
     <GoogleOAuthProvider clientId={clientId}>
-      <BrowserRouter>
-        <SplineLoadProvider>
-          <App />
-        </SplineLoadProvider>
-      </BrowserRouter>
+      <SplineLoadProvider>
+        <App />
+      </SplineLoadProvider>
     </GoogleOAuthProvider>
   </React.StrictMode>
 )

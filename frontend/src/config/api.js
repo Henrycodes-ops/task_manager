@@ -17,8 +17,9 @@ const api = {
     google: `${API_URL}/auth/google`,
     github: `${API_URL}/auth/github`,
     githubClientId: GITHUB_CLIENT_ID,
-    githubRedirectUri: "http://localhost:5173/signup",
+    githubRedirectUri: "http://localhost:5173/home",
     googleClientId: GOOGLE_CLIENT_ID,
+    googleRedirectUri: "http://localhost:5173/auth/google/callback",
   },
   user: {
     profile: `${API_URL}/users/profile`,

@@ -1,0 +1,137 @@
+.github-integration-container {
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 8px;
+  padding: 20px;
+  margin-bottom: 20px;
+}
+
+.github-header {
+  display: flex;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.github-icon {
+  font-size: 24px;
+  margin-right: 10px;
+  color: #fff;
+}
+
+.github-auth-message {
+  text-align: center;
+  padding: 20px;
+}
+
+.github-auth-message p {
+  color: rgba(255, 255, 255, 0.8);
+  margin-bottom: 15px;
+}
+
+.github-auth-button {
+  background: #24292e;
+  color: #fff;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 4px;
+  cursor: pointer;
+  font-weight: 500;
+  transition: background-color 0.3s;
+}
+
+.github-auth-button:hover {
+  background: #2f363d;
+}
+
+.repo-list {
+  max-height: 400px;
+  overflow-y: auto;
+}
+
+.repo-item {
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 4px;
+  padding: 15px;
+  margin-bottom: 10px;
+  cursor: pointer;
+  transition: all 0.3s;
+}
+
+.repo-item:hover {
+  background: rgba(255, 255, 255, 0.1);
+  border-color: rgba(255, 255, 255, 0.2);
+}
+
+.repo-item.selected {
+  background: rgba(255, 255, 255, 0.15);
+  border-color: #2ea44f;
+}
+
+.repo-info {
+  margin-bottom: 10px;
+}
+
+.repo-name {
+  font-weight: 600;
+  color: #fff;
+  display: block;
+  margin-bottom: 5px;
+}
+
+.repo-description {
+  color: rgba(255, 255, 255, 0.7);
+  font-size: 0.9em;
+}
+
+.repo-meta {
+  display: flex;
+  gap: 15px;
+  color: rgba(255, 255, 255, 0.6);
+  font-size: 0.8em;
+}
+
+.error-message {
+  color: #ff6b6b;
+  background: rgba(255, 107, 107, 0.1);
+  padding: 10px;
+  border-radius: 4px;
+  margin-bottom: 15px;
+}
+
+.loading {
+  text-align: center;
+  color: rgba(255, 255, 255, 0.7);
+  padding: 20px;
+}
+
+.no-repos {
+  text-align: center;
+  color: rgba(255, 255, 255, 0.7);
+  padding: 20px;
+}
+
+.refresh-button {
+  background: none;
+  border: none;
+  color: rgba(255, 255, 255, 0.7);
+  cursor: pointer;
+  padding: 5px;
+  margin-left: auto;
+}
+
+.refresh-button:hover {
+  color: #fff;
+}
+
+.refresh-button .spinning {
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+} 
