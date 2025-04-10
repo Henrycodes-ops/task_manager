@@ -66,10 +66,10 @@ export default function Login() {
       const data = await result.json();
 
       if (data.success) {
-        login(data.token, data.user);
-        navigate("/dashboard");
+        login(null, data.user);
+        navigate("/home");
       } else {
-        setError(data.message || "Invalid email or password");
+        setError(data.error || "Invalid email or password");
       }
     } catch (error) {
       console.error("Login error:", error);

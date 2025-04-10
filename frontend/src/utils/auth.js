@@ -1,15 +1,18 @@
 // frontend/src/utils/auth.js
 export const login = (token, user) => {
-  localStorage.setItem("token", token);
+  // Only store user data in localStorage, token is handled by HTTP-only cookie
   localStorage.setItem("user", JSON.stringify(user));
 };
 
 export const logout = () => {
-  localStorage.removeItem("token");
+  // Clear user data from localStorage
   localStorage.removeItem("user");
 };
 
-export const getToken = () => localStorage.getItem("token");
+export const getToken = () => {
+  // Token is handled by HTTP-only cookie, no need to get from localStorage
+  return null;
+};
 
 export const getUser = () => {
   const user = localStorage.getItem("user");
@@ -17,5 +20,6 @@ export const getUser = () => {
 };
 
 export const isAuthenticated = () => {
-  return !!getToken();
+  // Since we're using HTTP-only cookies, we can check if we have user data
+  return !!getUser();
 };

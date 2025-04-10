@@ -249,6 +249,7 @@ body {
   font-weight: 500;
   margin: 8px 0;
   font-family: BarlowMedium;
+  z-index: 1;
 }
 
 .form-group {
