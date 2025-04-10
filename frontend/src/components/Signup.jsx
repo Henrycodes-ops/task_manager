@@ -73,7 +73,7 @@ export default function Signup() {
         )
       ) {
         console.log("Google script already loaded");
-        setTimeout(() => initializeGoogleSignIn(), 500);
+        setTimeout(() => initializeGoogleSignIn(), 500);  
         return;
       }
 

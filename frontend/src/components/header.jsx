@@ -9,9 +9,11 @@ export default function Header() {
   return (
     <div className="header">
       {splineLoaded && (
-        <Link to="/login" className="getStarted">
-          <a className="getSpan">Get Started</a>
-        </Link>
+        <div>
+          <Link to="/login">
+            <span className="getStarted">Get Started</span>
+          </Link>
+        </div>
       )}
     </div>
   );

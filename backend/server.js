@@ -32,7 +32,6 @@ app.use(
       "https://accounts.google.com",
       "http://localhost:3001",
       "http://localhost:5173/signup",
-      "http://localhost:5173/home",
     ],
     credentials: true,
     methods: ["GET", "POST", "OPTIONS", "PUT", "DELETE"],
@@ -57,13 +56,6 @@ app.use(express.urlencoded({ extended: true }));
 app.get("/api/status", (req, res) => {
   res.json({ status: "Server is running" });
 });
-
-// Catch-all handler for the root and other frontend routes
-// app.get("*", (req, res) => {
-//   res.send(`
-  
-//   `);
-// });
 
 // Start the server
 app.listen(port, () => {

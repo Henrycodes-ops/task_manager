@@ -187,16 +187,29 @@ exports.githubLogin = async (req, res) => {
     });
 
     const { access_token } = response.data;
+    
+    // Get user data
     const userResponse = await axios.get('https://api.github.com/user', {
       headers: { Authorization: `Bearer ${access_token}` }
     });
 
+    // Get user emails
+    const emailResponse = await axios.get('https://api.github.com/user/emails', {
+      headers: { Authorization: `Bearer ${access_token}` }
+    });
+
     const githubUser = userResponse.data;
+    const primaryEmail = emailResponse.data.find(email => email.primary)?.email || emailResponse.data[0]?.email;
+
+    if (!primaryEmail) {
+      throw new Error('No email found for GitHub user');
+    }
+
     let user = await User.findOne({ githubId: githubUser.id });
     
     if (!user) {
       user = await User.create({
-        email: githubUser.email,
+        email: primaryEmail,
         name: githubUser.name || githubUser.login,
         githubId: githubUser.id,
         isVerified: true
