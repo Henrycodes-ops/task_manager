@@ -305,7 +305,8 @@ export default function Signup() {
           </button>
         </form>
         <div className="separator">or</div>
-        <div ref={googleButtonRef} className="google-signin-container"></div>
+        <div ref={googleButtonRef} className="google-signin-container">
+        </div>
         <button
           onClick={handleGitHubLogin}
           className="github-signin-button"

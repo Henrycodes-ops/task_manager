@@ -247,9 +247,11 @@ body {
   color: #ff0033;
   font-size: 14px;
   font-weight: 500;
-  margin: 8px 0;
-  font-family: BarlowMedium;
+  font-family: Barlow;
   z-index: 1;
+  position: relative;
+  background-color: var(--dark-input-bg);
+  margin-top: 3rem;
 }
 
 .form-group {
@@ -385,7 +387,8 @@ body {
 }
 
 .signUpWithGoogle:hover,
-.github-signin-button:hover {
+.github-signin-button:hover,
+.google-signin-container {
   background: var(--secondary-color);
   transform: translateY(-2px);
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
