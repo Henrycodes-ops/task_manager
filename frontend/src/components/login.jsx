@@ -53,6 +53,13 @@ export default function Login() {
     setLoading(true);
     setError("");
 
+    // Basic validation
+    if (!email || !password) {
+      setError("Email and password are required");
+      setLoading(false);
+      return;
+    }
+
     try {
       const result = await fetch(api.auth.login, {
         method: "POST",
@@ -66,6 +73,9 @@ export default function Login() {
       const data = await result.json();
 
       if (!result.ok) {
+        if (result.status === 401) {
+          throw new Error("Invalid email or password. Please try again.");
+        }
         throw new Error(data.error || "Login failed");
       }
 
@@ -73,7 +83,7 @@ export default function Login() {
         login(data.token, data.user);
         navigate("/home");
       } else {
-        setError(data.error || "Invalid email or password");
+        setError(data.error || "Login failed. Please try again.");
       }
     } catch (error) {
       console.error("Login error:", error);
