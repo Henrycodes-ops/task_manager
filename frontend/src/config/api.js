@@ -8,6 +8,7 @@ const api = {
   auth: {
     login: `${API_URL}/auth/login`,
     register: `${API_URL}/auth/register`,
+    signup: `${API_URL}/auth/signup`,
     logout: `${API_URL}/auth/logout`,
     forgotPassword: `${API_URL}/auth/forgot-password`,
     resetPassword: `${API_URL}/auth/reset-password`,

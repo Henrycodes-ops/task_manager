@@ -28,20 +28,18 @@ router.get('/google/callback', authController.googleCallback);
 // GitHub OAuth authentication
 router.post("/github", authController.githubLogin);
 
-// Email/password signup
+// Email/password authentication
 router.post("/signup", authController.signup);
-
-// Email/password login
 router.post("/login", authController.login);
+router.post("/logout", authController.logout);
 
-// New password reset routes
-router.post('/forgot-password', authController.forgotPassword);
-router.post('/reset-password', authController.resetPassword);
+// Password reset routes
+router.post("/forgot-password", authController.forgotPassword);
+router.post("/reset-password", authController.resetPassword);
 
-// Other auth routes
-router.post('/logout', authController.logout);
-router.get('/verify-email/:token', authController.verifyEmail);
-router.post('/resend-verification', authController.resendVerification);
+// Email verification routes
+router.post("/verify-email", authController.verifyEmail);
+router.post("/resend-verification", authController.resendVerification);
 
 // Helper function to find or create GitHub user
 async function findOrCreateGitHubUser(userData) {

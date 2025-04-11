@@ -223,20 +223,22 @@ export default function Signup() {
         credentials: "include",
       });
 
+      if (!result.ok) {
+        const errorData = await result.json().catch(() => ({}));
+        throw new Error(errorData.error || `HTTP error! status: ${result.status}`);
+      }
+
       const data = await result.json();
 
       if (data.success) {
-        // Use the same login function as social logins for consistency
         login(data.token, data.user);
-
-        // Navigate to home
         navigate("/home");
       } else {
-        setError(data.message || "Registration failed");
+        setError(data.error || "Registration failed");
       }
     } catch (error) {
       console.error("Signup error:", error);
-      setError("Server error. Please try again later.");
+      setError(error.message || "Server error. Please try again later.");
     } finally {
       setLoading(false);
     }

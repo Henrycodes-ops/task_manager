@@ -65,15 +65,19 @@ export default function Login() {
 
       const data = await result.json();
 
+      if (!result.ok) {
+        throw new Error(data.error || "Login failed");
+      }
+
       if (data.success) {
-        login(null, data.user);
+        login(data.token, data.user);
         navigate("/home");
       } else {
         setError(data.error || "Invalid email or password");
       }
     } catch (error) {
       console.error("Login error:", error);
-      setError("Server error. Please try again later.");
+      setError(error.message || "Server error. Please try again later.");
     } finally {
       setLoading(false);
     }

@@ -32,6 +32,7 @@ app.use(
       "https://accounts.google.com",
       "http://localhost:3001",
       "http://localhost:5173/signup",
+      "http://localhost:3000",
     ],
     credentials: true,
     methods: ["GET", "POST", "OPTIONS", "PUT", "DELETE"],
@@ -41,9 +42,11 @@ app.use(
 
 // Import route files
 const authRoutes = require("./routes/authRoutes");
+const taskRoutes = require("./routes/taskRoutes");
 
 // Mount API routes
 app.use("/api/auth", authRoutes);
+app.use("/api/tasks", taskRoutes);
 
 app.use((req, res, next) => {
   res.setHeader("Cross-Origin-Opener-Policy", "same-origin-allow-popups");
