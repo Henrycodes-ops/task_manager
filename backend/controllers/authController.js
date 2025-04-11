@@ -250,13 +250,10 @@ exports.signup = async (req, res) => {
       });
     }
 
-    // Hash password
-    const hashedPassword = await bcrypt.hash(password, 10);
-
-    // Create new user
+    // Create new user (password will be hashed by the User model's pre-save middleware)
     const user = await User.create({
       email,
-      password: hashedPassword,
+      password,  // Don't hash here, let the model handle it
       name,
       isVerified: false
     });
@@ -267,7 +264,8 @@ exports.signup = async (req, res) => {
     // Set HTTP-only cookie
     res.cookie('token', jwtToken, { 
       httpOnly: true, 
-      secure: process.env.NODE_ENV === 'production' 
+      secure: process.env.NODE_ENV === 'production',
+      sameSite: 'lax'
     });
 
     // Return success response with user data
@@ -293,25 +291,43 @@ exports.signup = async (req, res) => {
 exports.login = async (req, res) => {
   try {
     const { email, password } = req.body;
+    console.log('Login attempt:', { email, passwordLength: password?.length });
+
     const user = await User.findOne({ email });
+    console.log('User found:', !!user);
     
     if (!user) {
       return res.status(401).json({ success: false, error: 'Invalid credentials' });
     }
 
+    console.log('Comparing passwords...');
     const validPassword = await bcrypt.compare(password, user.password);
+    console.log('Password valid:', validPassword);
+
     if (!validPassword) {
       return res.status(401).json({ success: false, error: 'Invalid credentials' });
     }
 
-    // Temporarily skip email verification check
-    // if (!user.isVerified) {
-    //   return res.status(401).json({ success: false, error: 'Email not verified' });
-    // }
-
+    // Generate JWT token
     const jwtToken = generateToken(user);
-    res.cookie('token', jwtToken, { httpOnly: true, secure: process.env.NODE_ENV === 'production' });
-    res.json({ success: true, user: { id: user._id, email: user.email, name: user.name } });
+    console.log('JWT token generated');
+
+    // Set HTTP-only cookie with proper options
+    res.cookie('token', jwtToken, { 
+      httpOnly: true, 
+      secure: process.env.NODE_ENV === 'production',
+      sameSite: 'lax'
+    });
+
+    console.log('Login successful');
+    res.json({ 
+      success: true, 
+      user: { 
+        id: user._id, 
+        email: user.email, 
+        name: user.name 
+      } 
+    });
   } catch (error) {
     console.error('Login error:', error);
     res.status(500).json({ success: false, error: 'Login failed' });
