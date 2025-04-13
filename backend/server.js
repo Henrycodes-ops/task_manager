@@ -4,6 +4,7 @@ const dotenv = require("dotenv");
 const path = require("path");
 const cors = require("cors");
 const mongoose = require("mongoose");
+const cookieParser = require('cookie-parser');
 
 // Configure environment variables
 dotenv.config();
@@ -22,8 +23,9 @@ const port = process.env.PORT || 3001;
 
 // Add middleware
 app.use(express.json());
+app.use(cookieParser());
 
-// Add CORS middleware
+// Add CORS middleware with credentials support
 app.use(
   cors({
     origin: [
@@ -32,7 +34,6 @@ app.use(
       "https://accounts.google.com",
       "http://localhost:3001",
       "http://localhost:5173/signup",
-      "http://localhost:3000",
     ],
     credentials: true,
     methods: ["GET", "POST", "OPTIONS", "PUT", "DELETE"],

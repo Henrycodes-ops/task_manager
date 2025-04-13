@@ -10,8 +10,10 @@ const api = {
     register: `${API_URL}/auth/register`,
     signup: `${API_URL}/auth/signup`,
     logout: `${API_URL}/auth/logout`,
-    forgotPassword: `${API_URL}/auth/forgot-password`,
-    resetPassword: `${API_URL}/auth/reset-password`,
+    // forgotPassword: `${API_URL}/auth/forgot-password`,
+    // resetPassword: `${API_URL}/auth/reset-password`,
+    resetUserPassword: `${API_URL}/auth/reset-user-password`,
+    fixPassword: `${API_URL}/auth/fix-password`,
     verifyEmail: `${API_URL}/auth/verify-email`,
     resendVerification: `${API_URL}/auth/resend-verification`,
 

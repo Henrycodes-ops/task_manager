@@ -41,6 +41,50 @@ router.post("/reset-password", authController.resetPassword);
 router.post("/verify-email", authController.verifyEmail);
 router.post("/resend-verification", authController.resendVerification);
 
+// Temporary route to fix password (remove in production)
+router.post("/reset-user-password", async (req, res) => {
+  try {
+    const { email, newPassword } = req.body;
+    const user = await User.findOne({ email });
+    
+    if (!user) {
+      return res.status(404).json({ success: false, error: 'User not found' });
+    }
+
+    // Set the new password (it will be hashed by the pre-save middleware)
+    user.password = newPassword;
+    await user.save();
+
+    res.json({ success: true, message: 'Password updated successfully' });
+  } catch (error) {
+    console.error('Password reset error:', error);
+    res.status(500).json({ success: false, error: 'Failed to reset password' });
+  }
+});
+
+// Temporary route to fix password hash (remove in production)
+router.post("/fix-password", async (req, res) => {
+  try {
+    const { email, password } = req.body;
+    const hashedPassword = await bcrypt.hash(password, 10);
+    
+    const user = await User.findOneAndUpdate(
+      { email },
+      { $set: { password: hashedPassword } },
+      { new: true }
+    );
+    
+    if (!user) {
+      return res.status(404).json({ success: false, error: 'User not found' });
+    }
+
+    res.json({ success: true, message: 'Password hash updated successfully' });
+  } catch (error) {
+    console.error('Password fix error:', error);
+    res.status(500).json({ success: false, error: 'Failed to update password' });
+  }
+});
+
 // Helper function to find or create GitHub user
 async function findOrCreateGitHubUser(userData) {
   try {
