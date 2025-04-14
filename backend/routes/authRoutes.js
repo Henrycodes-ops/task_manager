@@ -3,10 +3,12 @@ const express = require("express");
 const axios = require("axios");
 const { OAuth2Client } = require("google-auth-library");
 const jwt = require("jsonwebtoken");
-const bcrypt = require("bcrypt");
+const bcrypt = require("bcryptjs");
+const passport = require('passport');
 const router = express.Router();
 const User = require("../models/user"); // Make sure this path is correct
 const authController = require('../controllers/authController');
+const { generateToken } = require('../utils/auth');
 console.log("User model loaded:", !!User);
 
 router.use((req, res, next) => {

@@ -5,7 +5,7 @@ const crypto = require('crypto');
 const nodemailer = require('nodemailer');
 const passport = require('passport');
 const { generateToken } = require('../utils/auth');
-const bcrypt = require('bcrypt');
+const bcrypt = require('bcryptjs');
 const axios = require('axios');
 
 const client = new OAuth2Client(process.env.GOOGLE_CLIENT_ID);
