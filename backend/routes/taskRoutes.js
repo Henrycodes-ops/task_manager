@@ -13,7 +13,7 @@ router.get('/', taskController.getTasks);
 router.post('/', taskController.createTask);
 
 // Update a task
-router.put('/:id', taskController.updateTask);
+router.put('/', taskController.updateTask);
 
 // Delete a task
 router.delete('/:id', taskController.deleteTask);
