@@ -1,49 +1,32 @@
-import { useState } from 'react';
-import { FiCheck, FiEdit2, FiTrash2, FiGitBranch } from 'react-icons/fi';
-import api from '../config/api';
+import { useState } from "react";
+import { FiCheck, FiEdit2, FiTrash2, FiGitBranch } from "react-icons/fi";
+import axios from "axios";
+import api from "../config/api";
 
-export default function TaskList({ tasks, loading, onTaskUpdate }) {
+export default function TaskList({
+  tasks,
+  loading,
+  onTaskUpdate,
+  onTaskDelete,
+}) {
   const [editingTask, setEditingTask] = useState(null);
   const [editMode, setEditMode] = useState(false);
 
   const handleStatusUpdate = async (taskId, newStatus) => {
     try {
-      const response = await fetch(api.tasks.update, {
-        method: 'PUT',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          taskId,
-          status: newStatus,
-        }),
-        credentials: 'include',
-      });
-
-      const data = await response.json();
-      if (data.success) {
-        onTaskUpdate();
-      }
+      await onTaskUpdate(taskId, { status: newStatus });
     } catch (error) {
-      console.error('Error updating task status:', error);
+      console.error("Error updating task status:", error);
     }
   };
 
   const handleDelete = async (taskId) => {
-    if (!window.confirm('Are you sure you want to delete this task?')) return;
+    if (!window.confirm("Are you sure you want to delete this task?")) return;
 
     try {
-      const response = await fetch(`${api.tasks.delete}/${taskId}`, {
-        method: 'DELETE',
-        credentials: 'include',
-      });
-
-      const data = await response.json();
-      if (data.success) {
-        onTaskUpdate();
-      }
+      await onTaskDelete(taskId);
     } catch (error) {
-      console.error('Error deleting task:', error);
+      console.error("Error deleting task:", error);
     }
   };
 
@@ -55,23 +38,15 @@ export default function TaskList({ tasks, loading, onTaskUpdate }) {
   const handleEditSubmit = async (e) => {
     e.preventDefault();
     try {
-      const response = await fetch(api.tasks.update, {
-        method: 'PUT',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(editingTask),
-        credentials: 'include',
+      // Use the onTaskUpdate function passed as prop instead of direct API call
+      await onTaskUpdate(editingTask._id, {
+        title: editingTask.title,
+        description: editingTask.description,
       });
-
-      const data = await response.json();
-      if (data.success) {
-        setEditMode(false);
-        setEditingTask(null);
-        onTaskUpdate();
-      }
+      setEditMode(false);
+      setEditingTask(null);
     } catch (error) {
-      console.error('Error updating task:', error);
+      console.error("Error updating task:", error);
     }
   };
 
@@ -133,7 +108,7 @@ export default function TaskList({ tasks, loading, onTaskUpdate }) {
                       <span className="due-date">
                         {task.dueDate
                           ? new Date(task.dueDate).toLocaleDateString()
-                          : 'No due date'}
+                          : "No due date"}
                       </span>
                     </div>
                   </div>
@@ -142,7 +117,7 @@ export default function TaskList({ tasks, loading, onTaskUpdate }) {
                       onClick={() =>
                         handleStatusUpdate(
                           task._id,
-                          task.status === 'completed' ? 'pending' : 'completed'
+                          task.status === "completed" ? "pending" : "completed"
                         )
                       }
                       className="status-button"
@@ -172,4 +147,4 @@ export default function TaskList({ tasks, loading, onTaskUpdate }) {
       )}
     </div>
   );
-} 
+}
