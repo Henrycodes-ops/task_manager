@@ -29,7 +29,7 @@ exports.authenticate = (req, res, next) => {
   if (!token) {
     return res.status(401).json({ 
       success: false, 
-      error: 'Authentication requireds' 
+      error: 'Authentication required' 
     });
   }
 
