@@ -8,7 +8,7 @@ const Chart = () => {
       <h3 >Project Progress
       </h3>
 
-   
+      
     </div>
   );
 };
