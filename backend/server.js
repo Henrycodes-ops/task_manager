@@ -56,6 +56,10 @@ app.use(session({
   }
 }));
 
+// Initialize passport and session
+app.use(passport.initialize());
+app.use(passport.session());
+
 // Import route files
 const authRoutes = require("./routes/authRoutes");
 const taskRoutes = require("./routes/taskRoutes");
