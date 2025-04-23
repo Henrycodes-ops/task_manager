@@ -5,12 +5,15 @@ const User = require('../models/user');
 const auth = async (req, res, next) => {
   try {
     // Get token from cookie
-    const token = req.cookies.token;
+    const authHeader = req.headers.authorization;
+
+
     
-    if (!token) {
+    if (!authHeader || !authHeader.startsWith('Bearer ')) {
       return res.status(401).json({ success: false, error: 'No token provided' });
     }
-
+    
+    const token = authHeader.split(' ')[1];
     // Verify token
     const decoded = jwt.verify(token, process.env.JWT_SECRET || 'your-secure-jwt-secret');
     
