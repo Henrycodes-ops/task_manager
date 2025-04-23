@@ -12,6 +12,9 @@ dotenv.config();
 // Initialize Express app
 const app = express();
 
+// Initialize passport configuration
+require("./config/passport");
+
 // Connect to MongoDB
 mongoose
   .connect(process.env.MONGODB_URI || "mongodb://localhost:27017/cortex")
@@ -40,6 +43,18 @@ app.use(
     allowedHeaders: ["Content-Type", "Authorization"],
   })
 );
+
+// Session configuration
+app.use(session({
+  secret: process.env.SESSION_SECRET || 'your-secret-key',
+  resave: false,
+  saveUninitialized: false,
+  cookie: {
+    secure: process.env.NODE_ENV === 'production',
+    httpOnly: true,
+    maxAge: 24 * 60 * 60 * 1000 // 24 hours
+  }
+}));
 
 // Import route files
 const authRoutes = require("./routes/authRoutes");
