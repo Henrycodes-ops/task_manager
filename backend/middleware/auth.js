@@ -1,35 +1,30 @@
-// backend/middleware/auth.js
 const jwt = require("jsonwebtoken");
 const User = require("../models/user");
 
 const auth = async (req, res, next) => {
   try {
-    // Get token from cookie
     let token;
 
+    // Check cookies first
     if (req.cookies && req.cookies.token) {
       token = req.cookies.token;
     }
-    // Get token from Authorization header
+    // If no cookie, check Authorization header
     else if (
       req.headers.authorization &&
       req.headers.authorization.startsWith("Bearer ")
     ) {
-      token = req.headers.authorization.split(' ')[1];
-    } else {
+      token = req.headers.authorization.split(" ")[1];
+    }
+
+    if (!token) {
       return res
         .status(401)
         .json({ success: false, error: "No token provided" });
     }
 
-    if (!token) {
-      return res.status(401).json({ success: false, error: "No token provided" });
-    }
-    // Verify token
-    const decoded = jwt.verify(
-      token,
-      process.env.JWT_SECRET || "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"
-    );
+    // Verify token with proper secret
+    const decoded = jwt.verify(token, process.env.JWT_SECRET);
 
     // Find user
     const user = await User.findById(decoded.userId);
