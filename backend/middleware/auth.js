@@ -22,11 +22,13 @@ const auth = async (req, res, next) => {
         .json({ success: false, error: "No token provided" });
     }
 
-    
+    if (!token) {
+      return res.status(401).json({ success: false, error: "No token provided" });
+    }
     // Verify token
     const decoded = jwt.verify(
       token,
-      process.env.JWT_SECRET || "your-secure-jwt-secret"
+      process.env.JWT_SECRET || "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"
     );
 
     // Find user
