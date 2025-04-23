@@ -10,8 +10,8 @@ export const logout = () => {
 };
 
 export const getToken = () => {
-  // Token is handled by HTTP-only cookie, no need to get from localStorage
-  return null;
+  
+  return localStorage.getItem("token");
 };
 
 export const getUser = () => {
