@@ -17,14 +17,7 @@ export default function TaskManager() {
   const [suggestions, setSuggestions] = useState([]);
   const navigate = useNavigate();
 
-  useEffect(() => {
-    const user = getUser();
-    if (!user) {
-      navigate('/login');
-      return;
-    }
-    fetchTasks();
-  }, [navigate]);
+ 
 
   const fetchTasks = async () => {
     try {

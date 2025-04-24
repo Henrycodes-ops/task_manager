@@ -15,7 +15,7 @@ export default function Home() {
 
   const fetchProfile = async () => {
     try {
-      const data = await fetchWithAuth(api.users.profile);
+      const data = await fetchWithAuth(api.user.profile);
       if (data.success) {
         setUser(data.user);
       }
