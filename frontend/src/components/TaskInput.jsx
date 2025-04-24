@@ -1,90 +1,199 @@
-import { useState } from 'react';
-import { FiPlus } from 'react-icons/fi';
-import '../components/css/taskInput.css';
+import React, { useState } from "react";
+import axios from "axios";
+import { FaPlus } from "react-icons/fa";
 
-export default function TaskInput({ onSubmit, selectedRepo, loading }) {
-  const [title, setTitle] = useState('');
-  const [description, setDescription] = useState('');
-  const [priority, setPriority] = useState('medium');
-  const [dueDate, setDueDate] = useState('');
+const TaskInput = ({ onTaskCreate, repository = null }) => {
+  const [taskTitle, setTaskTitle] = useState("");
+  const [taskDescription, setTaskDescription] = useState("");
+  const [priority, setPriority] = useState("medium");
+  const [dueDate, setDueDate] = useState("");
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState(null);
+  const [showForm, setShowForm] = useState(false);
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    if (!title.trim()) return;
 
-    onSubmit({
-      title,
-      description,
-      priority,
-      dueDate: dueDate || null,
-      status: 'pending',
-    });
+    if (!taskTitle.trim()) {
+      setError("Task title is required");
+      return;
+    }
 
-    // Reset form
-    setTitle('');
-    setDescription('');
-    setPriority('medium');
-    setDueDate('');
+    try {
+      setLoading(true);
+      setError(null);
+
+      const response = await axios.post("/api/tasks", {
+        title: taskTitle,
+        description: taskDescription,
+        priority,
+        dueDate: dueDate || null,
+        repository,
+      });
+
+      // Reset form
+      setTaskTitle("");
+      setTaskDescription("");
+      setPriority("medium");
+      setDueDate("");
+      setShowForm(false);
+
+      // Update parent component
+      if (onTaskCreate) {
+        onTaskCreate(response.data);
+      }
+    } catch (err) {
+      console.error("Error creating task:", err);
+      setError("Failed to create task. Please try again.");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const formatDate = (date) => {
+    if (!date) return "";
+    return new Date(date).toISOString().split("T")[0];
   };
 
   return (
-    <div className="task-input-container">
-      <form onSubmit={handleSubmit} className="task-input-form">
-        <div className="form-group">
-          <input
-            type="text"
-            placeholder="Task title"
-            value={title}
-            onChange={(e) => setTitle(e.target.value)}
-            disabled={loading}
-            required
-          />
-        </div>
+    <div className="mb-6">
+      {!showForm ? (
+        <button
+          onClick={() => setShowForm(true)}
+          className="flex items-center justify-center w-full py-2 px-4 bg-blue-50 hover:bg-blue-100 text-blue-600 rounded-lg border border-blue-200"
+        >
+          <FaPlus className="mr-2" /> Add New Task
+        </button>
+      ) : (
+        <form
+          onSubmit={handleSubmit}
+          className="border rounded-lg p-4 bg-gray-50"
+        >
+          {error && <div className="mb-3 text-sm text-red-600">{error}</div>}
 
-        <div className="form-group">
-          <textarea
-            placeholder="Task description"
-            value={description}
-            onChange={(e) => setDescription(e.target.value)}
-            disabled={loading}
-          />
-        </div>
-
-        <div className="form-row">
-          <div className="form-group">
-            <select
-              value={priority}
-              onChange={(e) => setPriority(e.target.value)}
-              disabled={loading}
+          <div className="mb-3">
+            <label
+              htmlFor="taskTitle"
+              className="block text-sm font-medium text-gray-700 mb-1"
             >
-              <option value="low">Low Priority</option>
-              <option value="medium">Medium Priority</option>
-              <option value="high">High Priority</option>
-            </select>
-          </div>
-
-          <div className="form-group">
+              Task Title
+            </label>
             <input
-              type="date"
-              value={dueDate}
-              onChange={(e) => setDueDate(e.target.value)}
-              disabled={loading}
+              type="text"
+              id="taskTitle"
+              value={taskTitle}
+              onChange={(e) => setTaskTitle(e.target.value)}
+              className="w-full p-2 border rounded"
+              placeholder="Enter task title"
+              required
             />
           </div>
-        </div>
 
-        {selectedRepo && (
-          <div className="github-repo-info">
-            <span className="repo-name">{selectedRepo.name}</span>
-            <span className="repo-branch">{selectedRepo.default_branch}</span>
+          <div className="mb-3">
+            <label
+              htmlFor="taskDescription"
+              className="block text-sm font-medium text-gray-700 mb-1"
+            >
+              Description (Optional)
+            </label>
+            <textarea
+              id="taskDescription"
+              value={taskDescription}
+              onChange={(e) => setTaskDescription(e.target.value)}
+              className="w-full p-2 border rounded"
+              placeholder="Enter task description"
+              rows="2"
+            />
           </div>
-        )}
 
-        <button type="submit" className="create-task-button" disabled={loading}>
-          <FiPlus />
-          {loading ? 'Creating...' : 'Create Task'}
-        </button>
-      </form>
+          <div className="flex flex-wrap -mx-2 mb-4">
+            <div className="w-full md:w-1/2 px-2 mb-3 md:mb-0">
+              <label
+                htmlFor="priority"
+                className="block text-sm font-medium text-gray-700 mb-1"
+              >
+                Priority
+              </label>
+              <select
+                id="priority"
+                value={priority}
+                onChange={(e) => setPriority(e.target.value)}
+                className="w-full p-2 border rounded"
+              >
+                <option value="low">Low</option>
+                <option value="medium">Medium</option>
+                <option value="high">High</option>
+                <option value="urgent">Urgent</option>
+              </select>
+            </div>
+
+            <div className="w-full md:w-1/2 px-2">
+              <label
+                htmlFor="dueDate"
+                className="block text-sm font-medium text-gray-700 mb-1"
+              >
+                Due Date (Optional)
+              </label>
+              <input
+                type="date"
+                id="dueDate"
+                value={formatDate(dueDate)}
+                onChange={(e) => setDueDate(e.target.value)}
+                className="w-full p-2 border rounded"
+              />
+            </div>
+          </div>
+
+          <div className="flex justify-end space-x-2">
+            <button
+              type="button"
+              onClick={() => setShowForm(false)}
+              className="px-4 py-2 bg-gray-200 hover:bg-gray-300 rounded"
+              disabled={loading}
+            >
+              Cancel
+            </button>
+
+            <button
+              type="submit"
+              className="px-4 py-2 bg-blue-500 hover:bg-blue-600 text-white rounded flex items-center"
+              disabled={loading}
+            >
+              {loading ? (
+                <>
+                  <svg
+                    className="animate-spin -ml-1 mr-2 h-4 w-4 text-white"
+                    xmlns="http://www.w3.org/2000/svg"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                  >
+                    <circle
+                      className="opacity-25"
+                      cx="12"
+                      cy="12"
+                      r="10"
+                      stroke="currentColor"
+                      strokeWidth="4"
+                    ></circle>
+                    <path
+                      className="opacity-75"
+                      fill="currentColor"
+                      d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+                    ></path>
+                  </svg>
+                  Creating...
+                </>
+              ) : (
+                <>
+                  <FaPlus className="mr-1" /> Create Task
+                </>
+              )}
+            </button>
+          </div>
+        </form>
+      )}
     </div>
   );
-} 
+};
+
+export default TaskInput;

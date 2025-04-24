@@ -1,55 +1,67 @@
-const mongoose = require('mongoose');
+const mongoose = require("mongoose");
+const Schema = mongoose.Schema;
 
-const taskSchema = new mongoose.Schema({
+const TaskSchema = new Schema({
   title: {
     type: String,
     required: true,
-    trim: true
   },
   description: {
     type: String,
-    trim: true
-  },
-  dueDate: {
-    type: Date
-  },
-  priority: {
-    type: String,
-    enum: ['low', 'medium', 'high'],
-    default: 'medium'
   },
   status: {
     type: String,
-    enum: ['pending', 'in-progress', 'completed'],
-    default: 'pending'
+    enum: ["todo", "in_progress", "review", "done"],
+    default: "todo",
   },
-  githubRepo: {
+  priority: {
     type: String,
-    trim: true
+    enum: ["low", "medium", "high", "urgent"],
+    default: "medium",
   },
-  githubBranch: {
-    type: String,
-    trim: true
-  },
-  userId: {
-    type: mongoose.Schema.Types.ObjectId,
-    ref: 'User',
-    required: true
+  dueDate: {
+    type: Date,
   },
   createdAt: {
     type: Date,
-    default: Date.now
+    default: Date.now,
   },
   updatedAt: {
     type: Date,
-    default: Date.now
-  }
+    default: Date.now,
+  },
+  user: {
+    type: Schema.Types.ObjectId,
+    ref: "User",
+    required: true,
+  },
+  repository: {
+    type: Schema.Types.ObjectId,
+    ref: "Repository",
+  },
+  githubIssue: {
+    issue_number: Number,
+    title: String,
+    html_url: String,
+    state: String,
+  },
+  labels: [
+    {
+      type: String,
+    },
+  ],
+  assignees: [
+    {
+      name: String,
+      avatar: String,
+    },
+  ],
 });
 
-// Update the updatedAt field before saving
-taskSchema.pre('save', function(next) {
+// Update timestamp on save
+TaskSchema.pre("save", function (next) {
   this.updatedAt = Date.now();
   next();
 });
 
-module.exports = mongoose.model('Task', taskSchema); 
+module.exports = mongoose.model("Task", TaskSchema);
