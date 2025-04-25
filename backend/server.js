@@ -4,7 +4,9 @@ const dotenv = require("dotenv");
 const path = require("path");
 const cors = require("cors");
 const mongoose = require("mongoose");
-const cookieParser = require('cookie-parser');
+const cookieParser = require("cookie-parser");
+const session = require("express-session"); // Added missing import
+const passport = require("passport"); // Ensure passport is imported
 
 // Configure environment variables
 dotenv.config();
@@ -36,7 +38,6 @@ app.use(
       "http://dev.example.com:5173",
       "https://accounts.google.com",
       "http://localhost:3001",
-      "http://localhost:5173/signup",
     ],
     credentials: true,
     methods: ["GET", "POST", "OPTIONS", "PUT", "DELETE"],
@@ -45,16 +46,18 @@ app.use(
 );
 
 // Session configuration
-app.use(session({
-  secret: process.env.SESSION_SECRET || 'your-secret-key',
-  resave: false,
-  saveUninitialized: false,
-  cookie: {
-    secure: process.env.NODE_ENV === 'production',
-    httpOnly: true,
-    maxAge: 24 * 60 * 60 * 1000 // 24 hours
-  }
-}));
+app.use(
+  session({
+    secret: process.env.SESSION_SECRET || "your-secret-key",
+    resave: false,
+    saveUninitialized: false,
+    cookie: {
+      secure: process.env.NODE_ENV === "production",
+      httpOnly: true,
+      maxAge: 24 * 60 * 60 * 1000, // 24 hours
+    },
+  })
+);
 
 // Initialize passport and session
 app.use(passport.initialize());
@@ -63,6 +66,7 @@ app.use(passport.session());
 // Import route files
 const authRoutes = require("./routes/authRoutes");
 const taskRoutes = require("./routes/taskRoutes");
+const userRoutes = require("./routes/userRoutes"); // Added missing import
 
 // Mount API routes
 app.use("/api/auth", authRoutes);
@@ -76,9 +80,23 @@ app.use((req, res, next) => {
 
 app.use(express.urlencoded({ extended: true }));
 
-// Basic status route
+// Basic status route for connection testing
 app.get("/api/status", (req, res) => {
   res.json({ status: "Server is running" });
+});
+
+// Debug route to check Google OAuth configuration
+app.get("/api/debug/config", (req, res) => {
+  res.json({
+    googleClientId: process.env.GOOGLE_CLIENT_ID,
+    environment: process.env.NODE_ENV,
+    corsOrigins: [
+      "http://localhost:5173",
+      "http://dev.example.com:5173",
+      "https://accounts.google.com",
+      "http://localhost:3001",
+    ],
+  });
 });
 
 // Start the server
