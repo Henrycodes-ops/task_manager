@@ -38,3 +38,18 @@ export const getUser = () => {
 export const isAuthenticated = () => {
   return !!getUser();
 };
+
+
+// Add this function for token retrieval
+export const getToken = () => {
+  // Since you're using HTTP-only cookies for the token,
+  // you probably don't have direct access to it in JavaScript.
+  // This is just a placeholder that would return an empty string
+  // or a token if you have it stored in localStorage
+  
+  // If you're storing token in localStorage:
+  // return localStorage.getItem(TOKEN_KEY) || '';
+  
+  // If using HTTP-only cookies only:
+  return ''; // Cookie will be sent automatically with credentials: 'include'
+};

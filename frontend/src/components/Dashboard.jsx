@@ -122,7 +122,7 @@ const Dashboard = ({ user }) => {
         </div>
 
         <div className="team-section">
-          <TeamSection />
+          {/* <TeamSection /> */}
         </div>
       </div>
     </div>
