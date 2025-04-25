@@ -2,7 +2,7 @@ import { createBrowserRouter, RouterProvider } from 'react-router-dom';
 import Login from './components/login';
 import Home from './components/home';
 import Signup from './components/signup';
-import Task from './components/task';
+// import Task from './components/task';
 import GitHubCallback from './components/githubCallback';
 import ForgotPassword from './components/ForgotPassword';
 import Header from './components/header';
@@ -30,10 +30,7 @@ const router = createBrowserRouter([
     path: "/signup",
     element: <Signup />,
   },
-  {
-    path: "/task",
-    element: <Task />,
-  },
+
   {
     path: "/githubCallback",
     element: <GitHubCallback />,

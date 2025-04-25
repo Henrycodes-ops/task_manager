@@ -12,7 +12,7 @@ import {
 import "./css/dashboard.css";
 import StatsCard from "./statsCard";
 import Chart from "./Chart";
-import TeamSection from "./TeamSection";
+// import TeamSection from "./TeamSection";
 import FilesList from "./FilesList";
 import { Link } from "react-router-dom";
 
