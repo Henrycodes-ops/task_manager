@@ -1,6 +1,5 @@
 import React, { useState } from "react";
-import axios from "axios";
-import { FaPlus } from "react-icons/fa";
+import  api  from "../config/api"; // Update with your actual path
 
 const TaskInput = ({ onTaskCreate, repository = null }) => {
   const [taskTitle, setTaskTitle] = useState("");
@@ -23,12 +22,16 @@ const TaskInput = ({ onTaskCreate, repository = null }) => {
       setLoading(true);
       setError(null);
 
-      const response = await axios.post("/api/tasks", {
-        title: taskTitle,
-        description: taskDescription,
-        priority,
-        dueDate: dueDate || null,
-        repository,
+      // Use the fetchWithAuth helper instead of axios directly
+      const data = await api("/api/tasks", {
+        method: "POST",
+        body: JSON.stringify({
+          title: taskTitle,
+          description: taskDescription,
+          priority,
+          dueDate: dueDate || null,
+          repository,
+        }),
       });
 
       // Reset form
@@ -40,7 +43,7 @@ const TaskInput = ({ onTaskCreate, repository = null }) => {
 
       // Update parent component
       if (onTaskCreate) {
-        onTaskCreate(response.data);
+        onTaskCreate(data);
       }
     } catch (err) {
       console.error("Error creating task:", err);
@@ -62,7 +65,7 @@ const TaskInput = ({ onTaskCreate, repository = null }) => {
           onClick={() => setShowForm(true)}
           className="flex items-center justify-center w-full py-2 px-4 bg-blue-50 hover:bg-blue-100 text-blue-600 rounded-lg border border-blue-200"
         >
-          <FaPlus className="mr-2" /> Add New Task
+          <span className="mr-2">+</span> Add New Task
         </button>
       ) : (
         <form
@@ -185,7 +188,7 @@ const TaskInput = ({ onTaskCreate, repository = null }) => {
                 </>
               ) : (
                 <>
-                  <FaPlus className="mr-1" /> Create Task
+                  <span className="mr-1">+</span> Create Task
                 </>
               )}
             </button>
