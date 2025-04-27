@@ -50,7 +50,7 @@ api.interceptors.request.use((config) => {
 });
 
 // API endpoints
-export default {
+api.endpoints = {
   tasks: {
     list: "/api/tasks",
     create: "/api/tasks",
@@ -66,3 +66,6 @@ export default {
     profile: "/api/users/profile",
   },
 };
+
+
+export default api

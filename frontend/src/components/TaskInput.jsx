@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import  api  from "../config/api"; // Update with your actual path
+import api from "../utils/api"; // Make sure this path is correct
 
 const TaskInput = ({ onTaskCreate, repository = null }) => {
   const [taskTitle, setTaskTitle] = useState("");
@@ -22,16 +22,14 @@ const TaskInput = ({ onTaskCreate, repository = null }) => {
       setLoading(true);
       setError(null);
 
-      // Use the fetchWithAuth helper instead of axios directly
-      const data = await api("/api/tasks", {
-        method: "POST",
-        body: JSON.stringify({
-          title: taskTitle,
-          description: taskDescription,
-          priority,
-          dueDate: dueDate || null,
-          repository,
-        }),
+      // Correct way to use axios for POST requests
+      const response = await api.post(api.endpoints.tasks.create, {
+        title: taskTitle,
+        description: taskDescription,
+        priority,
+        dueDate: dueDate || null,
+        repository,
+        status: "todo", // Adding default status as it's required in your model
       });
 
       // Reset form
@@ -43,7 +41,7 @@ const TaskInput = ({ onTaskCreate, repository = null }) => {
 
       // Update parent component
       if (onTaskCreate) {
-        onTaskCreate(data);
+        onTaskCreate(response.data);
       }
     } catch (err) {
       console.error("Error creating task:", err);

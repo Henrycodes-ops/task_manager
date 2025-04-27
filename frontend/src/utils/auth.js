@@ -2,6 +2,7 @@
 
 // Local storage keys
 const USER_KEY = "user_data";
+import api from "./api";
 
 // Login function - stores user data in localStorage
 // Token is handled by HTTP-only cookie
@@ -16,7 +17,7 @@ export const logout = async () => {
     localStorage.removeItem(USER_KEY);
 
     // Call logout endpoint to clear the cookie
-    await fetch("http://localhost:3001/api/auth/logout", {
+    await fetch(api.endpoints.auth.login, {
       method: "POST",
       credentials: "include",
     });
@@ -42,14 +43,6 @@ export const isAuthenticated = () => {
 
 // Add this function for token retrieval
 export const getToken = () => {
-  // Since you're using HTTP-only cookies for the token,
-  // you probably don't have direct access to it in JavaScript.
-  // This is just a placeholder that would return an empty string
-  // or a token if you have it stored in localStorage
-  
-  // If you're storing token in localStorage:
-  // return localStorage.getItem(TOKEN_KEY) || '';
-  
-  // If using HTTP-only cookies only:
-  return ''; // Cookie will be sent automatically with credentials: 'include'
+ 
+  return null; 
 };
