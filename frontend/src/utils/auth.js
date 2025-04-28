@@ -44,5 +44,5 @@ export const isAuthenticated = () => {
 // Add this function for token retrieval
 export const getToken = () => {
  
-  return null; 
+  return ''; 
 };
