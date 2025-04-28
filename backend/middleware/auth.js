@@ -7,7 +7,7 @@ const auth = async (req, res, next) => {
 
     // Check cookies first
     if (req.cookies && req.cookies.token) {
-      token = req.cookies.token;
+      token = req.cookies.token || req.header('Authorization')?.replace('Bearer ', '');
     }
     // If no cookie, check Authorization header
     else if (

@@ -8,6 +8,8 @@ import api from "./api";
 // Token is handled by HTTP-only cookie
 export const login = (token, user) => {
   localStorage.setItem(USER_KEY, JSON.stringify(user));
+
+  localStorage.setItem("auth_token", token); 
 };
 
 // Logout function - clears user data and makes logout request
@@ -43,6 +45,17 @@ export const isAuthenticated = () => {
 
 // Add this function for token retrieval
 export const getToken = () => {
- 
-  return ''; 
+  // If using localStorage:
+  // const user = getUser();
+  // return user?.token || '';
+
+  // Or if using cookies (requires a cookie parsing utility):
+  return getUser('auth_token') || '';
+
+  // Or if your auth flow is using session cookies managed by the browser:
+  // In this case, you might not need to explicitly set the Authorization header,
+  // as cookies are automatically sent with requests if withCredentials is true
+  
+
+  // return localStorage.getItem("auth_token") || "";
 };
