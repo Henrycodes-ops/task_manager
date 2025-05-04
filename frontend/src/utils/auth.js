@@ -1,61 +1,85 @@
-// frontend/src/utils/auth.js
+// src/utils/auth.js
+import axios from "axios";
 
-// Local storage keys
-const USER_KEY = "user_data";
-import api from "./api";
+// Set the base URL for API requests
+const API_URL = "http://localhost:3001/api";
 
-// Login function - stores user data in localStorage
-// Token is handled by HTTP-only cookie
+// Store user data in localStorage
 export const login = (token, user) => {
-  localStorage.setItem(USER_KEY, JSON.stringify(user));
+  localStorage.setItem("token", token);
+  localStorage.setItem("user", JSON.stringify(user));
 
-  localStorage.setItem("auth_token", token); 
+  // Set the default Authorization header for all future requests
+  axios.defaults.headers.common["Authorization"] = `Bearer ${token}`;
 };
 
-// Logout function - clears user data and makes logout request
-export const logout = async () => {
+export const logout = () => {
+  // Clear from localStorage
+  localStorage.removeItem("token");
+  localStorage.removeItem("user");
+
+  // Clear axios default headers
+  delete axios.defaults.headers.common["Authorization"];
+
+  // Call the backend logout endpoint to clear the cookie
+  return axios.post(`${API_URL}/auth/logout`, {}, { withCredentials: true });
+};
+
+export const getCurrentUser = () => {
+  const userStr = localStorage.getItem("user");
+  if (!userStr) return null;
+
   try {
-    // Clear user from localStorage
-    localStorage.removeItem(USER_KEY);
-
-    // Call logout endpoint to clear the cookie
-    await fetch(api.endpoints.auth.login, {
-      method: "POST",
-      credentials: "include",
-    });
-
-    return true;
+    return JSON.parse(userStr);
   } catch (error) {
-    console.error("Logout error:", error);
-    return false;
+    console.error("Error parsing user data:", error);
+    return null;
   }
 };
 
-// Get user data
-export const getUser = () => {
-  const userData = localStorage.getItem(USER_KEY);
-  return userData ? JSON.parse(userData) : null;
-};
-
-// Check if user is authenticated
-export const isAuthenticated = () => {
-  return !!getUser();
-};
-
-
-// Add this function for token retrieval
 export const getToken = () => {
-  // If using localStorage:
-  // const user = getUser();
-  // return user?.token || '';
+  return localStorage.getItem("token");
+};
 
-  // Or if using cookies (requires a cookie parsing utility):
-  return getUser('auth_token') || '';
+export const isAuthenticated = () => {
+  return !!getToken();
+};
 
-  // Or if your auth flow is using session cookies managed by the browser:
-  // In this case, you might not need to explicitly set the Authorization header,
-  // as cookies are automatically sent with requests if withCredentials is true
-  
+// Setup axios interceptors for authentication
+export const setupAuthInterceptors = () => {
+  // Request interceptor
+  axios.interceptors.request.use(
+    (config) => {
+      const token = getToken();
+      if (token) {
+        config.headers["Authorization"] = `Bearer ${token}`;
+      }
+      return config;
+    },
+    (error) => {
+      return Promise.reject(error);
+    }
+  );
 
-  // return localStorage.getItem("auth_token") || "";
+  // Response interceptor to handle auth errors
+  axios.interceptors.response.use(
+    (response) => response,
+    (error) => {
+      if (error.response && error.response.status === 401) {
+        // Token expired or invalid
+        logout();
+        window.location.href = "/login";
+      }
+      return Promise.reject(error);
+    }
+  );
+};
+
+// Initialize auth state from localStorage on app load
+export const initializeAuth = () => {
+  const token = getToken();
+  if (token) {
+    axios.defaults.headers.common["Authorization"] = `Bearer ${token}`;
+  }
+  setupAuthInterceptors();
 };

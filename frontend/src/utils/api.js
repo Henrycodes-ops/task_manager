@@ -1,71 +1,64 @@
+// src/utils/api.js
+import axios from "axios";
 import { getToken } from "./auth";
 
-// Helper for consistent API calls
-export const fetchWithAuth = async (url, options = {}) => {
-  const token = getToken();
+const API_URL = "http://localhost:3001/api";
 
-  const headers = {
-    "Content-Type": "application/json",
-    ...options.headers,
-  };
-
-  if (token) {
-    headers.Authorization = `Bearer ${token}`;
-  }
-
-  const response = await fetch(url, {
-    ...options,
-    headers,
-    credentials: "include", // This ensures cookies are sent with the request
-  });
-
-  if (!response.ok) {
-    const errorData = await response.json().catch(() => ({}));
-    console.error(`API Error (${response.status}):`, errorData);
-    throw new Error(errorData.error || "Request failed");
-  }
-
-  return response.json();
-};
-
-// Create a base API configuration for axios
-import axios from "axios";
-
-// Configure axios defaults
+// Create an axios instance with default config
 const api = axios.create({
-  baseURL: "http://localhost:3001", // Make sure this matches your backend URL
-  withCredentials: true,
+  baseURL: API_URL,
+  withCredentials: true, // Important for cookies
   headers: {
     "Content-Type": "application/json",
   },
 });
 
-// Add a request interceptor to add auth token to all requests
-api.interceptors.request.use((config) => {
-  const token = getToken();
-  if (token) {
-    config.headers.Authorization = `Bearer ${token}`;
-  }
-  return config;
-});
+// Wrapper for authenticated fetch
+export const fetchWithAuth = async (url, options = {}) => {
+  try {
+    const token = getToken();
+    const headers = {
+      ...options.headers,
+    };
 
-// API endpoints
-api.endpoints = {
-  tasks: {
-    list: "/api/tasks",
-    create: "/api/tasks",
-    update: "/api/tasks",
-    delete: "/api/tasks",
-  },
-  auth: {
-    login: "/api/auth/login",
-    register: "/api/auth/register",
-    logout: "/api/auth/logout",
-  },
-  user: {
-    profile: "/api/users/profile",
-  },
+    if (token) {
+      headers["Authorization"] = `Bearer ${token}`;
+    }
+
+    const config = {
+      ...options,
+      headers,
+      withCredentials: true,
+    };
+
+    const response = await api(url, config);
+    return response.data;
+  } catch (error) {
+    console.error("API Error:", error.response?.data || error.message);
+
+    // Check if the error is due to authentication
+    if (error.response?.status === 401) {
+      console.log("Authentication error - user not found or token invalid");
+    }
+
+    throw error;
+  }
 };
 
+// Common API methods
+export const fetchProfile = async () => {
+  return fetchWithAuth("/users/profile", { method: "GET" });
+};
 
-export default api
+export const fetchTasks = async () => {
+  return fetchWithAuth("/tasks", { method: "GET" });
+};
+
+export const createTask = async (taskData) => {
+  return fetchWithAuth("/tasks", {
+    method: "POST",
+    data: taskData,
+  });
+};
+
+export default api;

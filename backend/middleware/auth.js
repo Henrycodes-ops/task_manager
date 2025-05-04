@@ -1,3 +1,4 @@
+// middleware/auth.js
 const jwt = require("jsonwebtoken");
 const User = require("../models/user");
 
@@ -5,13 +6,11 @@ const auth = async (req, res, next) => {
   try {
     let token;
 
-    // Check cookies first
+    // Check for token in cookies first
     if (req.cookies && req.cookies.token) {
-      token =
-        req.cookies.token ||
-        req.header("Authorization")?.replace("Bearer ", "");
+      token = req.cookies.token;
     }
-    // If no cookie, check Authorization header
+    // Then check Authorization header (for non-browser clients or when cookies aren't available)
     else if (
       req.headers.authorization &&
       req.headers.authorization.startsWith("Bearer ")
@@ -20,26 +19,39 @@ const auth = async (req, res, next) => {
     }
 
     if (!token) {
+      console.log("No authentication token found");
       return res
         .status(401)
-        .json({ success: false, error: "No token provided" });
+        .json({ success: false, error: "Authentication required" });
     }
 
-    // Verify token with proper secret
-    const decoded = jwt.verify(token, process.env.JWT_SECRET);
+    // Verify token
+    try {
+      const decoded = jwt.verify(token, process.env.JWT_SECRET);
 
-    // Find user
-    const user = await User.findById(decoded.userId);
-    if (!user) {
-      return res.status(401).json({ success: false, error: "User not found" });
+      // Find user by ID
+      const user = await User.findById(decoded.userId);
+
+      if (!user) {
+        console.log("User not found for token");
+        return res
+          .status(401)
+          .json({ success: false, error: "User not found" });
+      }
+
+      // Add user and token to request
+      req.user = user;
+      req.token = token;
+      next();
+    } catch (tokenError) {
+      console.error("Token verification error:", tokenError);
+      return res
+        .status(401)
+        .json({ success: false, error: "Invalid or expired token" });
     }
-
-    // Attach user to request
-    req.user = user;
-    next();
   } catch (error) {
     console.error("Auth middleware error:", error);
-    res.status(401).json({ success: false, error: "Please authenticate" });
+    res.status(500).json({ success: false, error: "Authentication error" });
   }
 };
 
