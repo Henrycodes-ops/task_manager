@@ -1,47 +1,120 @@
-// frontend/src/config/api.js
-const API_URL = 'http://localhost:3001/api';
+import axios from "axios";
+import { getToken } from "./auth";
 
-const GITHUB_CLIENT_ID = "Ov23li0Zf2FMhySKZ9uP";
-const GOOGLE_CLIENT_ID = "1060221181168-tcqc0u99kb3kbnhjrburithdi5ga8cvo.apps.googleusercontent.com";
+const API_URL = "http://localhost:3001/api";
 
-const api = {
+// Define API endpoints
+const endpoints = {
   auth: {
-    login: `${API_URL}/auth/login`,
-    register: `${API_URL}/auth/register`,
-    signup: `${API_URL}/auth/signup`,
-    logout: `${API_URL}/auth/logout`,
-    // forgotPassword: `${API_URL}/auth/forgot-password`,
-    // resetPassword: `${API_URL}/auth/reset-password`,
-    resetUserPassword: `${API_URL}/auth/reset-user-password`,
-    fixPassword: `${API_URL}/auth/fix-password`,
-    verifyEmail: `${API_URL}/auth/verify-email`,
-    resendVerification: `${API_URL}/auth/resend-verification`,
-
-    google: `${API_URL}/auth/google`,
-    github: `${API_URL}/auth/github`,
-    githubClientId: GITHUB_CLIENT_ID,
-    githubRedirectUri: "http://localhost:5173/signup",
-    googleClientId: GOOGLE_CLIENT_ID,
-    googleRedirectUri: "http://localhost:5173/auth/google/callback",
+    login: `/auth/login`,
+    register: `/auth/register`,
+    signup: `/auth/signup`,
+    logout: `/auth/logout`,
+    resetUserPassword: `/auth/reset-user-password`,
+    fixPassword: `/auth/fix-password`,
+    verifyEmail: `/auth/verify-email`,
+    resendVerification: `/auth/resend-verification`,
+    google: `/auth/google`,
+    github: `/auth/github`,
   },
   user: {
-    profile: `${API_URL}/users/profile`,
-    update: `${API_URL}/users/update`,
-    changePassword: `${API_URL}/users/change-password`,
+    profile: `/users/profile`,
+    update: `/users/update`,
+    changePassword: `/users/change-password`,
   },
   tasks: {
-    list: `${API_URL}/tasks`,
-    create: `${API_URL}/tasks`,
-    update: `${API_URL}/tasks`,
-    delete: `${API_URL}/tasks`,
+    list: `/tasks`,
+    create: `/tasks`,
+    update: (id) => `/tasks/${id}`,
+    delete: (id) => `/tasks/${id}`,
   },
   ai: {
-    suggest: `${API_URL}/ai/suggest`,
+    suggest: `/ai/suggest`,
   },
   github: {
-    repos: `${API_URL}/github/repos`,
-    branches: `${API_URL}/github/branches`,
+    repos: `/github/repos`,
+    branches: `/github/branches`,
   },
 };
+
+// Create an axios instance with default config
+const api = axios.create({
+  baseURL: API_URL,
+  withCredentials: true, // Important for cookies
+  headers: {
+    "Content-Type": "application/json",
+  },
+});
+
+// Add request interceptor to include auth token
+api.interceptors.request.use(
+  (config) => {
+    const token = getToken();
+    if (token) {
+      config.headers["Authorization"] = `Bearer ${token}`;
+    }
+    return config;
+  },
+  (error) => {
+    return Promise.reject(error);
+  }
+);
+
+// Add response interceptor to handle auth errors
+api.interceptors.response.use(
+  (response) => response,
+  (error) => {
+    if (error.response && error.response.status === 401) {
+      // We could handle token refresh or redirect to login here
+      console.log("Authentication error - user not found or token invalid");
+    }
+    return Promise.reject(error);
+  }
+);
+
+// Wrapper for authenticated fetch
+export const fetchWithAuth = async (url, options = {}) => {
+  try {
+    const token = getToken();
+    const headers = {
+      ...options.headers,
+    };
+
+    if (token) {
+      headers["Authorization"] = `Bearer ${token}`;
+    }
+
+    const config = {
+      ...options,
+      headers,
+      withCredentials: true,
+    };
+
+    const response = await api(url, config);
+    return response.data;
+  } catch (error) {
+    console.error("API Error:", error.response?.data || error.message);
+    throw error;
+  }
+};
+
+// Common API methods
+export const fetchProfile = async () => {
+  return fetchWithAuth("/users/profile", { method: "GET" });
+};
+
+export const fetchTasks = async () => {
+  return fetchWithAuth("/tasks", { method: "GET" });
+};
+
+export const createTask = async (taskData) => {
+  return fetchWithAuth("/tasks", {
+    method: "POST",
+    data: taskData,
+  });
+};
+
+// Add endpoints to the api object
+api.endpoints = endpoints;
 
 export default api;
