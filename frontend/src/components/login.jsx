@@ -14,6 +14,11 @@ export default function Login() {
   const [error, setError] = useState("");
   const navigate = useNavigate();
 
+   useEffect(() => {
+     // Set default axios config
+     axios.defaults.withCredentials = true;
+   }, []);
+
   // First, let's test the backend connection
   const testBackendConnection = async () => {
     try {
