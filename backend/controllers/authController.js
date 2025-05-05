@@ -292,48 +292,53 @@ exports.signup = async (req, res) => {
 exports.login = async (req, res) => {
   try {
     const { email, password } = req.body;
-    console.log('Login attempt:', { email, passwordLength: password?.length });
+    console.log("Login attempt:", { email, passwordLength: password?.length });
 
     // Find user by email
     const user = await User.findOne({ email });
-    console.log('User found:', !!user);
-    
+    console.log("User found:", !!user);
+
     if (!user) {
-      return res.status(401).json({ 
-        success: false, 
-        error: 'Invalid credentials' 
+      return res.status(401).json({
+        success: false,
+        error: "Invalid credentials",
       });
     }
 
     // Verify password
-    console.log('Comparing passwords...');
+    console.log("Comparing passwords...");
     const validPassword = await bcrypt.compare(password, user.password);
-    console.log('Password valid:', validPassword);
+    console.log("Password valid:", validPassword);
 
     if (!validPassword) {
-      return res.status(401).json({ 
-        success: false, 
-        error: 'Invalid credentials' 
+      return res.status(401).json({
+        success: false,
+        error: "Invalid credentials",
       });
     }
 
     // Generate JWT token
     const jwtToken = generateToken(user);
-    console.log('JWT token generated');
+    console.log("JWT token generated");
 
     // Set HTTP-only cookie
-    setAuthCookie(res, jwtToken);
+    // Set HTTP-only cookie with proper options
+    res.cookie("token", jwtToken, {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === "production",
+      sameSite: "lax",
+    });
 
     // Also return token in response for clients that can't use cookies
-    console.log('Login successful');
-    res.json({ 
+    console.log("Login successful");
+    res.json({
       success: true,
       token: jwtToken, // Include token in response
-      user: { 
-        id: user._id, 
-        email: user.email, 
-        name: user.name 
-      } 
+      user: {
+        id: user._id,
+        email: user.email,
+        name: user.name,
+      },
     });
   } catch (error) {
     console.error('Login error:', error);
