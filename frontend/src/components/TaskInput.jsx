@@ -1,6 +1,9 @@
 import React, { useState } from "react";
 import api from "../utils/api"; // Make sure this path is correct
-import '../components/css/taskInput.css'
+import "../components/css/taskInput.css";
+
+import "../config/api";
+
 
 const TaskInput = ({ onTaskCreate, repository = null }) => {
   const [taskTitle, setTaskTitle] = useState("");
@@ -23,8 +26,8 @@ const TaskInput = ({ onTaskCreate, repository = null }) => {
       setLoading(true);
       setError(null);
 
-      // Correct way to use axios for POST requests
-      const response = await api.post(api.endpoints.tasks.create, {
+      // Use the API directly without referencing endpoints
+      const response = await api.post(api.endpoints.tasks, {
         title: taskTitle,
         description: taskDescription,
         priority,
@@ -67,10 +70,7 @@ const TaskInput = ({ onTaskCreate, repository = null }) => {
           <span className="mr-2">+</span> Add New Task
         </button>
       ) : (
-        <form
-          onSubmit={handleSubmit}
-          className="form-group"
-        >
+        <form onSubmit={handleSubmit} className="form-group">
           {error && <div className="mb-3 text-sm text-red-600">{error}</div>}
 
           <div className="mb-3">
@@ -85,7 +85,7 @@ const TaskInput = ({ onTaskCreate, repository = null }) => {
               id="taskTitle"
               value={taskTitle}
               onChange={(e) => setTaskTitle(e.target.value)}
-              className=""
+              className="w-full p-2 border rounded"
               placeholder="Enter task title"
               required
             />
@@ -94,7 +94,7 @@ const TaskInput = ({ onTaskCreate, repository = null }) => {
           <div className="mb-3">
             <label
               htmlFor="taskDescription"
-              className=""
+              className="block text-sm font-medium text-gray-700 mb-1"
             >
               Description (Optional)
             </label>
@@ -108,7 +108,7 @@ const TaskInput = ({ onTaskCreate, repository = null }) => {
             />
           </div>
 
-          <div className="form-row">
+          <div className="flex flex-wrap -mx-2">
             <div className="w-full md:w-1/2 px-2 mb-3 md:mb-0">
               <label
                 htmlFor="priority"
@@ -146,7 +146,7 @@ const TaskInput = ({ onTaskCreate, repository = null }) => {
             </div>
           </div>
 
-          <div className="flex justify-end space-x-2">
+          <div className="flex justify-end space-x-2 mt-3">
             <button
               type="button"
               onClick={() => setShowForm(false)}
@@ -194,6 +194,9 @@ const TaskInput = ({ onTaskCreate, repository = null }) => {
           </div>
         </form>
       )}
+      
+      
+      
     </div>
   );
 };

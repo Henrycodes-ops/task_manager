@@ -1,5 +1,5 @@
 import axios from "axios";
-import { getToken } from "./auth";
+import { getToken } from "../utils/auth";
 
 const API_URL = "http://localhost:3001/api";
 
@@ -45,6 +45,12 @@ const api = axios.create({
     "Content-Type": "application/json",
   },
 });
+
+// Initialize with stored token if available
+const token = getToken();
+if (token) {
+  api.defaults.headers.common["Authorization"] = `Bearer ${token}`;
+}
 
 // Add request interceptor to include auth token
 api.interceptors.request.use(
