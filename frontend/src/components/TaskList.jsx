@@ -1,12 +1,12 @@
 import React, { useState, useEffect } from "react";
 import api from "../utils/api";
 
+const API_URL = "http://localhost:3001/api";
+
 const TaskList = ({ repository = null }) => {
   const [tasks, setTasks] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-
-  const API_URL = "http://localhost:3001/api";
 
   useEffect(() => {
     const fetchTasks = async () => {
@@ -30,7 +30,7 @@ const TaskList = ({ repository = null }) => {
     };
 
     fetchTasks();
-  }, [repository]);
+  }, [repository]); // This will re-run when repository changes or when the component is re-rendered with a new key
 
   const getPriorityColor = (priority) => {
     switch (priority.toLowerCase()) {
@@ -88,7 +88,7 @@ const TaskList = ({ repository = null }) => {
       {tasks.map((task) => (
         <div
           key={task._id}
-        
+          className="p-4 bg-white rounded-lg shadow-sm border border-gray-200 mb-4"
         >
           <div className="flex justify-between items-start">
             <div className="flex-1">
