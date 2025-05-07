@@ -1,9 +1,6 @@
 import React, { useState } from "react";
-
-import { Link } from "react-router-dom";
 import api from "../utils/api"; // Make sure this path is correct
 import "../components/css/taskInput.css";
-
 
 const API_URL = "http://localhost:3001/api";
 
@@ -37,7 +34,7 @@ const TaskInput = ({ onTaskCreate, repository = null }) => {
           priority,
           dueDate: dueDate || null,
           repository,
-          status: "todo", // Adding default status as it's required in your model
+          status: "todo", // Adding default status as required in model
         },
         {
           withCredentials: true, // Important for cookies
@@ -200,19 +197,14 @@ const TaskInput = ({ onTaskCreate, repository = null }) => {
                 </>
               ) : (
                 <>
-                      <span className="mr-1">+</span>
-                  
-                      <Link to="/TaskPage">
-                      Create Task
-                      </Link>
+                  <span className="mr-1">+</span>
+                  Create Task
                 </>
               )}
             </button>
           </div>
-          </form>
-          
+        </form>
       )}
-      
     </div>
   );
 };
