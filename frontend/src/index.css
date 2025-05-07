@@ -1,3 +1,8 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+
 @font-face {
   font-family: Barlow;
   src: url(./Barlow_Semi_Condensed/BarlowSemiCondensed-Bold.ttf);

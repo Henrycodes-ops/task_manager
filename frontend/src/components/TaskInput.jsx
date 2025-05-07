@@ -2,8 +2,8 @@ import React, { useState } from "react";
 import api from "../utils/api"; // Make sure this path is correct
 import "../components/css/taskInput.css";
 
-import "../config/api";
 
+const API_URL = "http://localhost:3001/api";
 
 const TaskInput = ({ onTaskCreate, repository = null }) => {
   const [taskTitle, setTaskTitle] = useState("");
@@ -27,14 +27,25 @@ const TaskInput = ({ onTaskCreate, repository = null }) => {
       setError(null);
 
       // Use the API directly without referencing endpoints
-      const response = await api.post(api.endpoints.tasks, {
-        title: taskTitle,
-        description: taskDescription,
-        priority,
-        dueDate: dueDate || null,
-        repository,
-        status: "todo", // Adding default status as it's required in your model
-      });
+      const response = await api.post(
+        `${API_URL}/tasks`,
+        {
+          title: taskTitle,
+          description: taskDescription,
+          priority,
+          dueDate: dueDate || null,
+          repository,
+          status: "todo", // Adding default status as it's required in your model
+        },
+        {
+          withCredentials: true, // Important for cookies
+          headers: {
+            "Content-Type": "application/json",
+            // Add auth token if needed
+            Authorization: `Bearer ${localStorage.getItem("token")}`,
+          },
+        }
+      );
 
       // Reset form
       setTaskTitle("");
@@ -194,8 +205,7 @@ const TaskInput = ({ onTaskCreate, repository = null }) => {
           </div>
         </form>
       )}
-      
-      
+
       
     </div>
   );
