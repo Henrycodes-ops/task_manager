@@ -3,6 +3,7 @@ import Login from './components/login';
 import Home from './components/home';
 import Signup from './components/signup';
 import TaskInput from './components/TaskInput';
+import TaskPage from './components/TaskPage';
 import GitHubCallback from './components/githubCallback';
 import ForgotPassword from './components/ForgotPassword';
 import Header from './components/header';
@@ -43,6 +44,10 @@ const router = createBrowserRouter([
   {
     path: "/forgot-password",
     element: <ForgotPassword />,
+  },
+  {
+    path: "/TaskPage",
+    element: <TaskPage/>
   },
 ]);
 

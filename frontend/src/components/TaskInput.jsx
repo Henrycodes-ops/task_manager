@@ -1,4 +1,6 @@
 import React, { useState } from "react";
+
+import { Link } from "react-router-dom";
 import api from "../utils/api"; // Make sure this path is correct
 import "../components/css/taskInput.css";
 
@@ -198,14 +200,18 @@ const TaskInput = ({ onTaskCreate, repository = null }) => {
                 </>
               ) : (
                 <>
-                  <span className="mr-1">+</span> Create Task
+                      <span className="mr-1">+</span>
+                  
+                      <Link to="/TaskPage">
+                      Create Task
+                      </Link>
                 </>
               )}
             </button>
           </div>
-        </form>
+          </form>
+          
       )}
-
       
     </div>
   );

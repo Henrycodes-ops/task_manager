@@ -32,6 +32,10 @@ body {
   position: absolute;
 }
 
+.font-bold{ 
+  color: #3273dc;
+}
+
 .getStarted  {
   font-family: Barlow;
   font-size: 16px;
