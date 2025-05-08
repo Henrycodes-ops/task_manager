@@ -1,3 +1,4 @@
+// TaskPage.jsx
 import React, { useState } from "react";
 import TaskInput from "./TaskInput";
 import TaskList from "./TaskList";
@@ -5,10 +6,8 @@ import TaskList from "./TaskList";
 const TaskPage = () => {
   const [refreshTrigger, setRefreshTrigger] = useState(0);
 
-  // This function will be called after a new task is created
   const handleTaskCreated = (newTask) => {
-    // Increment the refresh trigger to force TaskList to re-fetch tasks
-    setRefreshTrigger((prev) => prev + 1);
+    setRefreshTrigger((prev) => prev + 1); // 👈 Triggers re-fetch in TaskList
     console.log("Task created, refreshing list:", newTask);
   };
 
@@ -20,8 +19,8 @@ const TaskPage = () => {
         <TaskInput onTaskCreate={handleTaskCreated} />
       </div>
 
-      {/* Pass the refreshTrigger as a key to force re-render */}
-      <TaskList key={refreshTrigger} />
+      {/* ✅ Now we pass refreshTrigger instead of using `key` */}
+      <TaskList refreshTrigger={refreshTrigger} />
     </div>
   );
 };

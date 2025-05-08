@@ -1,9 +1,10 @@
+// TaskList.jsx
 import React, { useState, useEffect } from "react";
 import api from "../utils/api";
 
 const API_URL = "http://localhost:3001/api";
 
-const TaskList = ({ repository = null }) => {
+const TaskList = ({ repository = null, refreshTrigger }) => {
   const [tasks, setTasks] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -30,7 +31,7 @@ const TaskList = ({ repository = null }) => {
     };
 
     fetchTasks();
-  }, [repository]); // This will re-run when repository changes or when the component is re-rendered with a new key
+  }, [repository, refreshTrigger]); // 👈 re-fetch when refreshTrigger changes
 
   const getPriorityColor = (priority) => {
     switch (priority.toLowerCase()) {
@@ -84,7 +85,6 @@ const TaskList = ({ repository = null }) => {
   return (
     <div className="space-y-4">
       <h2 className="text-xl font-semibold mb-4">Your Tasks</h2>
-
       {tasks.map((task) => (
         <div
           key={task._id}
@@ -110,7 +110,6 @@ const TaskList = ({ repository = null }) => {
               </span>
             </div>
           </div>
-
           <div className="mt-3 pt-3 border-t border-gray-100 flex justify-between text-sm text-gray-500">
             <div>Created: {new Date(task.createdAt).toLocaleDateString()}</div>
             <div>Due: {formatDate(task.dueDate)}</div>
