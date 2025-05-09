@@ -46,6 +46,13 @@ const router = createBrowserRouter([
     element: <ForgotPassword />,
   },
   {
+
+    path: "/TaskInput",
+    element: <TaskInput />,
+  },
+
+
+  {
     path: "/TaskPage",
     element: <TaskPage/>
   },

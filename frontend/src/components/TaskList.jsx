@@ -2,8 +2,6 @@
 import React, { useState, useEffect } from "react";
 import api from "../utils/api";
 
-const API_URL = "http://localhost:3001/api";
-
 const TaskList = ({ repository = null, refreshTrigger }) => {
   const [tasks, setTasks] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -12,25 +10,17 @@ const TaskList = ({ repository = null, refreshTrigger }) => {
   useEffect(() => {
     const fetchTasks = async () => {
       try {
-        // setLoading(true);
-        // const response = await api.get('/tasks', {
-        //   withCredentials: true,
-        //   headers: {
-        //     Authorization: `Bearer ${localStorage.getItem("token")}`,
-        //   },
-        //   params: repository ? { repository } : {},
-        // });
-       console.log(setTasks([
-          {
-            _id: "1",
-            title: "Test Task",
-            priority: "medium",
-            createdAt: new Date(),
-            status: "open",
+        setLoading(true);
+        const response = await api.get("/tasks", {
+          withCredentials: true,
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("token")}`,
           },
-        ]));
-        
+          params: repository ? { repository } : {},
+        });
 
+        // Ensure we're setting the response.data instead of response object
+        setTasks(response.data || []);
         setError(null);
       } catch (err) {
         console.error("Error fetching tasks:", err);
@@ -41,10 +31,10 @@ const TaskList = ({ repository = null, refreshTrigger }) => {
     };
 
     fetchTasks();
-  }, [repository, refreshTrigger]); // 👈 re-fetch when refreshTrigger changes
+  }, [repository, refreshTrigger]);
 
   const getPriorityColor = (priority) => {
-    switch (priority.toLowerCase()) {
+    switch (priority?.toLowerCase() || "default") {
       case "low":
         return "bg-green-100 text-green-800";
       case "medium":
@@ -84,7 +74,7 @@ const TaskList = ({ repository = null, refreshTrigger }) => {
     );
   }
 
-  if (tasks.length === 0) {
+  if (!tasks || tasks.length === 0) {
     return (
       <div className="p-8 text-center text-gray-500">
         No tasks found. Add a new task to get started!
@@ -113,15 +103,25 @@ const TaskList = ({ repository = null, refreshTrigger }) => {
                   task.priority
                 )}`}
               >
-                {task.priority.charAt(0).toUpperCase() + task.priority.slice(1)}
+                {task.priority
+                  ? task.priority.charAt(0).toUpperCase() +
+                    task.priority.slice(1)
+                  : "None"}
               </span>
               <span className="text-xs px-2 py-1 rounded-full bg-gray-100 text-gray-800">
-                {task.status.charAt(0).toUpperCase() + task.status.slice(1)}
+                {task.status
+                  ? task.status.charAt(0).toUpperCase() + task.status.slice(1)
+                  : "No Status"}
               </span>
             </div>
           </div>
           <div className="mt-3 pt-3 border-t border-gray-100 flex justify-between text-sm text-gray-500">
-            <div>Created: {new Date(task.createdAt).toLocaleDateString()}</div>
+            <div>
+              Created:{" "}
+              {task.createdAt
+                ? new Date(task.createdAt).toLocaleDateString()
+                : "Unknown"}
+            </div>
             <div>Due: {formatDate(task.dueDate)}</div>
           </div>
         </div>

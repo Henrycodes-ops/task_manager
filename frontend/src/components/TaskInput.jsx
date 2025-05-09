@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import api from "../utils/api"; // Make sure this path is correct
 import "../components/css/taskInput.css";
-
+import { Link } from "react-router-dom";
 const API_URL = "http://localhost:3001/api";
 
 const TaskInput = ({ onTaskCreate, repository = null }) => {
@@ -196,9 +196,11 @@ const TaskInput = ({ onTaskCreate, repository = null }) => {
                   Creating...
                 </>
               ) : (
-                <>
-                  <span className="mr-1">+</span>
+                    <>
+                      <Link to="/TaskPage"> <span className="mr-1" >+</span >
                   Create Task
+                      </Link>
+                 
                 </>
               )}
             </button>
