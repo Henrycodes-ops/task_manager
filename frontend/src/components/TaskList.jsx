@@ -12,15 +12,25 @@ const TaskList = ({ repository = null, refreshTrigger }) => {
   useEffect(() => {
     const fetchTasks = async () => {
       try {
-        setLoading(true);
-        const response = await api.get(`${API_URL}/tasks`, {
-          withCredentials: true,
-          headers: {
-            Authorization: `Bearer ${localStorage.getItem("token")}`,
+        // setLoading(true);
+        // const response = await api.get('/tasks', {
+        //   withCredentials: true,
+        //   headers: {
+        //     Authorization: `Bearer ${localStorage.getItem("token")}`,
+        //   },
+        //   params: repository ? { repository } : {},
+        // });
+       console.log(setTasks([
+          {
+            _id: "1",
+            title: "Test Task",
+            priority: "medium",
+            createdAt: new Date(),
+            status: "open",
           },
-          params: repository ? { repository } : {},
-        });
-        setTasks(response.data);
+        ]));
+        
+
         setError(null);
       } catch (err) {
         console.error("Error fetching tasks:", err);
