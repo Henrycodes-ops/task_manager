@@ -76,46 +76,41 @@ const TaskList = ({ repository = null, refreshTrigger }) => {
 
   if (!tasks || tasks.length === 0) {
     return (
-      <div className="p-8 text-center text-gray-500">
+      <div className="">
         No tasks found. Add a new task to get started!
       </div>
     );
   }
 
   return (
-    <div className="space-y-4">
-      <h2 className="text-xl font-semibold mb-4">Your Tasks</h2>
+    <div className="task-list-container">
+      <h2 className="task-list-title">Your Tasks</h2>
       {tasks.map((task) => (
-        <div
-          key={task._id}
-          className="p-4 bg-white rounded-lg shadow-sm border border-gray-200 mb-4"
-        >
-          <div className="flex justify-between items-start">
-            <div className="flex-1">
-              <h3 className="font-medium text-lg">{task.title}</h3>
+        <div key={task._id} className="task-card glass">
+          <div className="task-card-header">
+            <div className="task-card-main">
+              <h3 className="task-title">{task.title}</h3>
               {task.description && (
-                <p className="text-gray-600 mt-1">{task.description}</p>
+                <p className="task-desc">{task.description}</p>
               )}
             </div>
-            <div className="flex space-x-2">
+            <div className="task-tags">
               <span
-                className={`text-xs px-2 py-1 rounded-full ${getPriorityColor(
-                  task.priority
-                )}`}
+                className={`task-priority ${getPriorityColor(task.priority)}`}
               >
                 {task.priority
                   ? task.priority.charAt(0).toUpperCase() +
                     task.priority.slice(1)
                   : "None"}
               </span>
-              <span className="text-xs px-2 py-1 rounded-full bg-gray-100 text-gray-800">
+              <span className="task-status">
                 {task.status
                   ? task.status.charAt(0).toUpperCase() + task.status.slice(1)
                   : "No Status"}
               </span>
             </div>
           </div>
-          <div className="mt-3 pt-3 border-t border-gray-100 flex justify-between text-sm text-gray-500">
+          <div className="task-dates">
             <div>
               Created:{" "}
               {task.createdAt
@@ -128,6 +123,7 @@ const TaskList = ({ repository = null, refreshTrigger }) => {
       ))}
     </div>
   );
+
 };
 
 export default TaskList;

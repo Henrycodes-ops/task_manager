@@ -1,6 +1,4 @@
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+
 
 
 @font-face {
@@ -553,4 +551,9 @@ body {
   .login-form::before .signup-form::before {
     opacity: 0.4;
   }
+}
+
+
+.status {
+  color: #3273dc;
 }
