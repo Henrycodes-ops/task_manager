@@ -30,8 +30,8 @@ const Dashboard = ({ user }) => {
           </div>
 
           <div className="menu-item">
-            <Link to="/TaskInput" className="menu-link">
-              <FiCalendar /> Schedule
+            <Link to="/TaskPage" className="menu-link">
+              <FiCalendar /> Tasks
             </Link>
           </div>
 

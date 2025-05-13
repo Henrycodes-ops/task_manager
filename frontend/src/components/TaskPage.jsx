@@ -13,7 +13,7 @@ const TaskPage = () => {
 
   return (
     <div className="container mx-auto px-4 py-8 max-w-4xl">
-      <h1 className="text-2xl font-bold mb-6">Task Manager</h1>
+      <h1 className="text-2xl font-bold mb-6">Cortex</h1>
 
       <div className="mb-8">
         <TaskInput onTaskCreate={handleTaskCreated} />

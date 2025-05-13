@@ -1,6 +1,7 @@
 // TaskList.jsx
 import React, { useState, useEffect } from "react";
 import api from "../utils/api";
+import "../components/css/taskList.css"; // Ensure this path is correct
 
 const TaskList = ({ repository = null, refreshTrigger }) => {
   const [tasks, setTasks] = useState([]);
